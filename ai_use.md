@@ -26,8 +26,8 @@ Purpose: Naming abilities, moves, monsters for the game
 Relevant prompts and outputs used, or retained transcript location:
 
 Prompts (in order):
-- I am making a video game. Come up with the name of an ability and a move that heals HP for a knight
-- Come up with the name of an ability that increases damage dealt the more HP that is lost
+- I am making a video game. Come up with the name of an ability and a move that regenerates health for a knight
+- Come up with the name of an ability that increases damage dealt the more health that is lost
 - Come up with the name of an ability that reduces damage taken
 - Come up with the name of an ability that increases mana regeneration
 - Come up with the name of a move that deals damage based on defense. Keep in mind that this is used by a defensive character
