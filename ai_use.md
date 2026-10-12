@@ -17,10 +17,10 @@ If no group member used AI, no entries are needed. Otherwise add an entry for ea
 
 ## Entry 01
 
-- Member and date: Eric, Oct 12
-- Tool and model/version, where available: Claude Sonnet 5.5
-- Purpose: Naming abilities, moves, monsters for the game
-- Relevant prompts and outputs used, or retained transcript location:
+Member and date: Eric, Oct 12
+Tool and model/version, where available: Claude Sonnet 5.5
+Purpose: Naming abilities, moves, monsters for the game
+Relevant prompts and outputs used, or retained transcript location:
 Prompts (in order):
 - I am making a video game. Come up with the name of an ability and a move that heals HP for a knight
 - Come up with the name of an ability that increases damage dealt the more HP that is lost
@@ -35,9 +35,9 @@ Outputs used:
 - Grace
 - Bulwark Blow
 - Infernus (dragon), Kronos (titan), Morvain (necromancer)
-- Files/materials affected: N/A, as we are still in a planning phase
-- What we kept, changed or rejected: We decided to adopt the names
-- How we checked it; tests and corrections: N/A
+Files/materials affected: N/A, as we are still in a planning phase
+What we kept, changed or rejected: We decided to adopt the names
+How we checked it; tests and corrections: N/A
 
 
 Keep evidence accessible to the teaching team. Remove credentials and unrelated personal information. Submit the completed file as `ai_use.md` with the project.
