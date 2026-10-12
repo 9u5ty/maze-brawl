@@ -17,7 +17,7 @@ If no group member used AI, no entries are needed. Otherwise add an entry for ea
 
 ## Entry 01
 
-Member and date: Eric, Oct 12
+Member and date: Shum Tin Yu (Eric), Oct 12
 
 Tool and model/version, where available: Claude Sonnet 5.5
 
