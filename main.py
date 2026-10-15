@@ -43,5 +43,5 @@ def main(stdscr):
     screen_render.setup_colors()
     stdscr.refresh()
     stdscr.addstr(0, 0, "This is a test", screen_render.menu_text)
-
+    stdscr.getch()
 curses.wrapper(main)
