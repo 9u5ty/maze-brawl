@@ -8,4 +8,4 @@ curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
 text_selected = curses.color_pair(1)
 text_stats = curses.color_pair(2)
-
+text_new = curses.color_pair(3)
