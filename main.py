@@ -41,7 +41,7 @@ changing stuff will not break everything else.
 
 def main(stdscr):
     screen_render.setup_colors()
-    curses.refresh()
+    stdscr.refresh()
     curses.addstr(0, 0, "This is a test", screen_render.menu_text)
 
 curses.wrapper(main)
