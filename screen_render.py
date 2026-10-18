@@ -21,8 +21,9 @@ def setup_colors():
 
 #Drawing window border. Can use for various window purposes. Planning to have this be part of a custom window making function.
 def draw_border(stdscr, x1, y1, x2, y2):
-    #draw border of 80x24 characters.
+    #draws window border.
     #TREAT X AND Y COORDS AS IF THEY START FROM 0 LIKE ADDSTR FUNCTIONS!!!
+    #Need at least 2 coord difference between initial and final coords otherwise an error will occur lol
     if x2 < x1 or y2 < y1:
         raise ValueError("second coordinate parameter cannot be smaller than first coordinate parameter!")
     stdscr.addstr(y1 , x1, "╔")
