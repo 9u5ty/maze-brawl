@@ -41,7 +41,8 @@ changing stuff will not break everything else.
 
 def main(stdscr):
     sr.setup_colors()
-    sr.draw_border(stdscr, 0, 0, sr.W_WIDTH, sr.W_HEIGHT)
+    sr.window_create(1, "test", "menu")
+    sr.draw_border(stdscr, 0, 0, sr.W_WIDTH, sr.W_HEIGHT, 1)
     stdscr.refresh()
     stdscr.addstr(1, 2, "This is a test", sr.menu_text_select_bold)
     stdscr.getch()
