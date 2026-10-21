@@ -11,8 +11,8 @@ active_windows = {} #Dict for active windows, when creating windows will access 
 #   #Can directly access window data once the window has been created, can edit items, etc.
 # }
 #
+tooltip_string = ""
 window_active = False
-
 
 def setup_colors():
     #creates color and text attribute templates for use in window systems.
@@ -25,7 +25,14 @@ def setup_colors():
     global menu_text_select_bold; menu_text_select_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_BLINK #when selected with cursor/arrow keys, UI item will blink. Can add more colors later.
     global menu_text; menu_text = curses.color_pair(1) | curses.A_REVERSE  #
     global menu_text_bold; menutext_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE
+    global text_red_bold; text_red_bold = curses.COLOR_RED | curses.A_BOLD
 
+def blank_rect(stdscr, top, left, height, width, attr=0):
+    line = " " * width
+    for y in range(top, top + height):
+        stdscr.addstr(y, left, line, attr)
+    stdscr.refresh()
+    
 
 def window_create(windownumber:int, windowname:str, windowtype:str): #Adds window to memory (dict).
     active_windows[windownumber] = [[windownumber, windowname.lower(), windowtype.lower()],[],[],[]]
@@ -63,21 +70,40 @@ def draw_border(stdscr, x1:int, y1:int, x2:int, y2:int, windownumber:int):
     for i in range(range_y - 1):
         stdscr.addstr(y1 + i  +1, x2, "║")
 
-def add_menu_button(buttonname:str): #adding buttons to an active window.
-    active_windows[1][2].append(buttonname)
+def add_menu_button(windownumber:int, buttonname:str): #adding buttons to an active window.
+    active_windows[windownumber][2].append(buttonname)
 
 
-
-def draw_menu(button_padding:int, rows:int, columns:int):
+def draw_menu(windownumber:int, button_padding_x:int, button_padding_y:int, rows:int, columns:int):
     #Draws menu buttons within the window.
     #using x1, y1, x2, y2, defines dimensions to arrange grids in. 
     #for rows, column, need to trim button name to fit, display button name on tooltip
+    button_height = 1
+    min_button_length = 1
+    button_length = 0
+    is_button_selected = False #button will be selected based on number id, calculated from column and row, and pages.
+    
+    
+    
     if rows < 1 or columns < 1:
         raise ValueError("Cannot have row or column value less than one!")
-    if button_padding < 0:
+    if button_padding_x < 0 or button_padding_y < 0:
         raise ValueError("Cannot have padding value below zero! ")
     x1 = active_windows[2][0]
     y1 = active_windows[2][1]
     x2 = active_windows[2][2]
     y2 = active_windows[2][3]
+    #calculate area for buttons, account for padding, rows, columns.
+    
+    buttons = rows * columns 
+    length = x2 - x1
+    height = y2 - y1
+    buttons = []
+    for i in range(len(active_windows[windownumber][1])):
+        buttons.append(active_windows[windownumber][1][i])
+
+    
+    while window_active: #activates window loop, navigation, etc. Can build upon this for other systems.
+        pass
+    
     
