@@ -7,10 +7,12 @@ active_windows = {} #Dict for active windows, when creating windows will access 
 # If there's more windows, will access coordinates, menus, and access them based on that (which is how the inventory can visually update.)
 # active_windows = {
 #
-#   [[windownumber, windowname, windowtype],[item, item2, item3, ...],[x1, y1, x2, y2],[asset_sprite1, asset_sprite2]]
+#   windownumber:[[windowname, windowtype],[item, item2, item3, ...],[x1, y1, x2, y2],[asset_sprite1, asset_sprite2]]
 #   #Can directly access window data once the window has been created, can edit items, etc.
 # }
 #
+window_active = False
+
 
 def setup_colors():
     #creates color and text attribute templates for use in window systems.
@@ -26,7 +28,7 @@ def setup_colors():
 
 
 def window_create(windownumber:int, windowname:str, windowtype:str): #Adds window to memory (dict).
-    active_windows[windownumber] = [[windownumber, windowname, windowtype],[],[],[]]
+    active_windows[windownumber] = [[windownumber, windowname.lower(), windowtype.lower()],[],[],[]]
 
 #Drawing window border. Can use for various window purposes. Planning to have this be part of a custom window making function.
 def draw_border(stdscr, x1:int, y1:int, x2:int, y2:int, windownumber:int):
@@ -40,6 +42,7 @@ def draw_border(stdscr, x1:int, y1:int, x2:int, y2:int, windownumber:int):
     #Need at least 2 coord difference between initial and final coords otherwise an error will occur lol
     if x2 < x1 or y2 < y1:
         raise ValueError("second coordinate parameter cannot be smaller than first coordinate parameter!")
+
     coords = [x1,y1,x2,y2]
     active_windows[windownumber][2].extend(coords) #adds coordinates to active window memory. Will be important later.
     
@@ -60,4 +63,21 @@ def draw_border(stdscr, x1:int, y1:int, x2:int, y2:int, windownumber:int):
     for i in range(range_y - 1):
         stdscr.addstr(y1 + i  +1, x2, "║")
 
-#
+def add_menu_button(buttonname:str): #adding buttons to an active window.
+    active_windows[1][2].append(buttonname)
+
+
+
+def draw_menu(button_padding:int, rows:int, columns:int):
+    #Draws menu buttons within the window.
+    #using x1, y1, x2, y2, defines dimensions to arrange grids in. 
+    #for rows, column, need to trim button name to fit, display button name on tooltip
+    if rows < 1 or columns < 1:
+        raise ValueError("Cannot have row or column value less than one!")
+    if button_padding < 0:
+        raise ValueError("Cannot have padding value below zero! ")
+    x1 = active_windows[2][0]
+    y1 = active_windows[2][1]
+    x2 = active_windows[2][2]
+    y2 = active_windows[2][3]
+    
