@@ -20,12 +20,13 @@ def setup_colors():
     
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_RED,   curses.COLOR_BLACK)
     
     global menu_text_select; menu_text_select = curses.color_pair(1) #base variable
     global menu_text_select_bold; menu_text_select_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_BLINK #when selected with cursor/arrow keys, UI item will blink. Can add more colors later.
-    global menu_text; menu_text = curses.color_pair(1) | curses.A_REVERSE  #
-    global menu_text_bold; menutext_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE
-    global text_red_bold; text_red_bold = curses.COLOR_RED | curses.A_BOLD
+    global menu_text; menu_text = curses.color_pair(1) | curses.A_REVERSE
+    global menu_text_bold; menu_text_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE
+    global text_red_bold; text_red_bold = curses.color_pair(3) | curses.A_BOLD
 
 def blank_rect(stdscr, top, left, height, width, attr=0):
     line = " " * width
@@ -39,71 +40,93 @@ def window_create(windownumber:int, windowname:str, windowtype:str): #Adds windo
 
 #Drawing window border. Can use for various window purposes. Planning to have this be part of a custom window making function.
 def draw_border(stdscr, x1:int, y1:int, x2:int, y2:int, windownumber:int):
-    if len(active_windows[windownumber][2]) > 0: #overwrites if there already are coords for window, incase mistake is made.
-        x1 = active_windows[windownumber][2][0]
-        y2 = active_windows[windownumber][2][1]
-        x2 = active_windows[windownumber][2][2]
-        y2 = active_windows[windownumber][2][3]
-    #draws window border.
-    #TREAT X AND Y COORDS AS IF THEY START FROM 0 LIKE ADDSTR FUNCTIONS!!!
-    #Need at least 2 coord difference between initial and final coords otherwise an error will occur lol
-    if x2 < x1 or y2 < y1:
-        raise ValueError("second coordinate parameter cannot be smaller than first coordinate parameter!")
+    # If the window already has stored coords, use those instead
+    if len(active_windows[windownumber][2]) >= 4:
+        x1, y1, x2, y2 = active_windows[windownumber][2][:4]
+    else:
+        active_windows[windownumber][2][:] = [x1, y1, x2, y2]
 
-    coords = [x1,y1,x2,y2]
-    active_windows[windownumber][2].extend(coords) #adds coordinates to active window memory. Will be important later.
-    
-    stdscr.addstr(y1 , x1, "╔")
-    stdscr.addstr(y1, x2, "╗")
-    stdscr.addstr(y2, x1, "╚")
-    stdscr.addstr(y2, x2, "╝") 
-    step_x = x2 - x1
-    step_y = y2 - y1
-    range_x = step_x
-    range_y = step_y
-    for i in range(range_x - 1):
+    if x2 <= x1 or y2 <= y1:
+        raise ValueError("x2/y2 must be greater than x1/y1")
+
+    stdscr.addstr(y1, x1, "╔"); stdscr.addstr(y1, x2, "╗")
+    stdscr.addstr(y2, x1, "╚"); stdscr.addstr(y2, x2, "╝")
+    for i in range(x2 - x1 - 1):
         stdscr.addstr(y1, x1 + i + 1, "═")
-    for i in range(range_x - 1):
         stdscr.addstr(y2, x1 + i + 1, "═")
-    for i in range(range_y - 1):
+    for i in range(y2 - y1 - 1):
         stdscr.addstr(y1 + i + 1, x1, "║")
-    for i in range(range_y - 1):
-        stdscr.addstr(y1 + i  +1, x2, "║")
+        stdscr.addstr(y1 + i + 1, x2, "║")
 
 def add_menu_button(windownumber:int, buttonname:str): #adding buttons to an active window.
-    active_windows[windownumber][2].append(buttonname)
+    active_windows[windownumber][1].append(buttonname)
 
 
-def draw_menu(windownumber:int, button_padding_x:int, button_padding_y:int, rows:int, columns:int):
+
+def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:int, rows:int, columns:int):
     #Draws menu buttons within the window.
     #using x1, y1, x2, y2, defines dimensions to arrange grids in. 
     #for rows, column, need to trim button name to fit, display button name on tooltip
-    button_height = 1
-    min_button_length = 1
-    button_length = 0
-    is_button_selected = False #button will be selected based on number id, calculated from column and row, and pages.
-    
-    
     
     if rows < 1 or columns < 1:
         raise ValueError("Cannot have row or column value less than one!")
     if button_padding_x < 0 or button_padding_y < 0:
-        raise ValueError("Cannot have padding value below zero! ")
-    x1 = active_windows[2][0]
-    y1 = active_windows[2][1]
-    x2 = active_windows[2][2]
-    y2 = active_windows[2][3]
+        raise ValueError("Cannot have padding value below zero!")
+    
+    x1, y1, x2, y2 = active_windows[windownumber][2][:4]
+    buttons        = active_windows[windownumber][1]
+    if not buttons:
+        return None
+    
+    inner_left   = x1 + 1
+    inner_top    = y1 + 1
+    inner_width  = (x2 - x1) - 1      # width between the window sides
+    inner_height = (y2 - y1) - 1      # height between the window top and bottom
+
+    cell_width   = max(1, inner_width // columns)   # one column of the grid
+    cell_height  = 1 + button_padding_y             # 1 text row + vertical gap
+    
+    def button_rect(index):
+        r = index // columns
+        c = index % columns
+        bx = inner_left + c * cell_width + button_padding_x
+        by = inner_top  + r * cell_height + button_padding_y
+        bw = max(1, cell_width - 2 * button_padding_x)
+        return bx, by, bw
+
+    visible = buttons[: rows * columns]   #no pages so far I don't want to implement that hellish thing
+
+    def render(selected):
+        for i, name in enumerate(visible):
+            bx, by, bw = button_rect(i)
+            label = name[:bw].ljust(bw)
+            attr  = menu_text_select_bold if i == selected else menu_text
+            stdscr.addstr(by, bx, label, attr)
+            stdscr.addstr(23, 0, f"                                                                    ")
+            stdscr.addstr(23, 0, f"{active_windows[windownumber][0][0]}: {active_windows[windownumber][1][selected]}")
+        stdscr.refresh()
     #calculate area for buttons, account for padding, rows, columns.
     
-    buttons = rows * columns 
-    length = x2 - x1
-    height = y2 - y1
-    buttons = []
-    for i in range(len(active_windows[windownumber][1])):
-        buttons.append(active_windows[windownumber][1][i])
+    selected = 0
+    total = len(visible)
 
-    
-    while window_active: #activates window loop, navigation, etc. Can build upon this for other systems.
-        pass
-    
+    while True:
+        render(selected)
+        key = stdscr.getch()
+
+        if key in (curses.KEY_LEFT,  ord('a')): 
+            selected = (selected - 1) % total #makes the selected button visible
+        elif key in (curses.KEY_RIGHT, ord('d')): 
+            selected = (selected + 1) % total
+        elif key in (curses.KEY_UP, ord('w')):
+            selected = (selected - columns) % total
+        elif key in (curses.KEY_DOWN, ord('s')):
+            selected = (selected + columns) % total
+        elif key in (curses.KEY_ENTER, 10, 13):
+            return visible[selected]          # ← the chosen button
+        elif key == 27:                       # ESC
+            return None
+   
+
+   
     

@@ -40,12 +40,21 @@ changing stuff will not break everything else.
 """
 
 def main(stdscr):
-    sr.setup_colors()
     curses.curs_set(0)
-    sr.window_create(1, "test", "menu")
-    sr.draw_border(stdscr, 0, 0, sr.W_WIDTH, sr.W_HEIGHT, 1)
+    stdscr.keypad(True)
+    curses.noecho()
+    curses.cbreak()
+    sr.setup_colors()
+    sr.window_create(0, "Menu", "menu")
+    sr.draw_border(stdscr, 0, 0, 78, 22, 0)
+    sr.add_menu_button(0, "Start")
+    sr.add_menu_button(0, "Options")
+    sr.add_menu_button(0, "Quit")
+    choice = sr.draw_menu(stdscr, 0, 1, 0, 3, 1)
+    stdscr.clear()
+    stdscr.addstr(1, 1, f"You picked: {choice}")
     stdscr.refresh()
-    stdscr.addstr(1, 2, "This is a test", sr.menu_text_select_bold)
-    stdscr.addstr(3, 2, str(sr.active_windows[1][2]))
     stdscr.getch()
 curses.wrapper(main)
+
+import curses
