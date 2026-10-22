@@ -103,7 +103,7 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
             attr  = menu_text_select_bold if i == selected else menu_text
             stdscr.addstr(by, bx, label, attr)
             stdscr.addstr(23, 0, f"                                                                    ")
-            stdscr.addstr(23, 0, f"{active_windows[windownumber][0][0]}: {active_windows[windownumber][1][selected]}")
+            stdscr.addstr(23, 0, f"{active_windows[windownumber][0][1]}: {active_windows[windownumber][1][selected]}")
         stdscr.refresh()
     #calculate area for buttons, account for padding, rows, columns.
     
