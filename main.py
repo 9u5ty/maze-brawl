@@ -1,7 +1,7 @@
 import curses
 import sys
 import os
-import screen_render
+import screen_render as sr
 # Just writing some documentation to help planning out the whole game and make things somewhat clearer. #
 
 """
@@ -40,8 +40,21 @@ changing stuff will not break everything else.
 """
 
 def main(stdscr):
-    screen_render.setup_colors()
+    curses.curs_set(0)
+    stdscr.keypad(True)
+    curses.noecho()
+    curses.cbreak()
+    sr.setup_colors()
+    sr.window_create(0, "Menu", "menu")
+    sr.draw_border(stdscr, 0, 0, 78, 22, 0)
+    sr.add_menu_button(0, "Start")
+    sr.add_menu_button(0, "Options")
+    sr.add_menu_button(0, "Quit")
+    choice = sr.draw_menu(stdscr, 0, 1, 0, 3, 1)
+    stdscr.clear()
+    stdscr.addstr(1, 1, f"You picked: {choice}")
     stdscr.refresh()
-    stdscr.addstr(0, 0, "This is a test", screen_render.menu_text)
     stdscr.getch()
 curses.wrapper(main)
+
+import curses
