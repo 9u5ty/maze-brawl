@@ -25,7 +25,7 @@ help = [
 legend = [
     [("@", "white"), (" you   ", None), ("$", "green"), (" shop   ", None),
      ("E", "cyan"), (" exit   ", None), ("#", "blue"), (" wall   ", None),
-     ("1 2 3", "red"), (" must-fight, in order", None)], #Each nested list is a separate line
+     ("1 2 3", "red"), (" must-fight, in order", None)], #Each nested list is a separate line on the helpbook
     
     [("s", "green"), (" slime   ", None), ("g", "yellow"), (" goblin   ", None),
      ("S", "white"), (" skeleton   ", None), ("b", "magenta"), (" bat   ", None),
