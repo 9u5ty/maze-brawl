@@ -345,7 +345,7 @@ monsters = {
 #Defines the three different maps
 maps = [
     {
-        "key": "labyrinth", "name": "The Labyrinth", "file": "labyrinth.txt", #txt file stores the actual map
+        "key": "labyrinth", "name": "The Labyrinth", "file": "easy.txt", #txt file stores the actual map
         "difficulty": "Easy", "color": "blue", "blurb": "One long, winding stone maze.", #These information show up on the map selection screen
         "boss": "dragon", #Final boss of the map
         "path_monsters": ["maze_slime", "goblin_guard", "skeleton_warden"], #Monsters that appear on the map that must be fought
@@ -358,7 +358,7 @@ maps = [
     },
 
     {
-        "key": "caverns", "name": "Crystal Cavern", "file": "caverns.txt",
+        "key": "caverns", "name": "Crystal Cavern", "file": "medium.txt",
         "difficulty": "Medium", "color": "cyan", "blurb": "Looping caves with open chambers.",
         "boss": "titan",
         "path_monsters": ["crystal_spider", "alpha_wolf", "orc_warchief"],
@@ -371,7 +371,7 @@ maps = [
     },
 
     {
-        "key": "citadel", "name": "Obsidian Citadel", "file": "citadel.txt",
+        "key": "citadel", "name": "Obsidian Citadel", "file": "hard.txt",
         "difficulty": "Hard", "color": "red", "blurb": "Rooms joined by long corridors.",
         "boss": "necro",
         "path_monsters": ["goblin_captain", "skeleton_lord", "dark_priest"],
