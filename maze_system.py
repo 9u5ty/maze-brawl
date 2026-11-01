@@ -18,6 +18,9 @@ def load_maze(file_path):
     start_x = None
     start_y = None
 
+    mandatory_chars = {"1", "2", "3"}
+    optional_chars = {"a", "b", "c", "d", "e", "f"}
+
     with open(file_path, "r", encoding="utf-8") as f:
         lines = f.read().splitlines()
 
@@ -28,13 +31,13 @@ def load_maze(file_path):
                 start_x = x
                 start_y = y
                 row[x] = " "
-            elif ch == "M":
+            elif ch in mandatory_chars:
                 mandatory_monsters.add((x, y))
-            elif ch == "m":
+            elif ch in optional_chars:
                 optional_monsters.add((x, y))
         maze_map.append(row)
 
-    return maze_map, start_x, start_y, mandatory_monsters, optional_monsters
+    return maze_map, start_x, start_y, mandatory_monsters, optional_monster
 
 # What will returns:
 #maze_map: list[list[str]]
@@ -77,29 +80,25 @@ def move_player(maze_map, dead_monsters, mandatory_monsters, optional_monsters, 
             return tx, ty, None
 
     # shop S
-    if target_cell == "S":
+    if target_cell == "$":
         return tx, ty, "shop"
 
     # boss B
     if target_cell == "B":
         return tx, ty, "boss_combat"
 
+     # exit E
+    if target_cell == "E":
+        return tx, ty, "exit"
+
+    
     # normal passable floor
     return tx, ty, None
 
-
+   # Mark one monster as killed. Call this after combat victory.
 def mark_monster_dead(dead_monsters, x, y):
-    """
-    Mark one monster as killed. Call this after combat victory.
-
-    Args:
-        dead_monsters: set[tuple[int,int]]
-        x, y: int, coordinate of dead monster (x, y)
-    """
     dead_monsters.add((x, y))
 
-
-#Generate maze text lines for UI rendering. No print inside this function.
 def render_maze(maze_map, player_x, player_y, mandatory_monsters, optional_monsters, dead_monsters):
 
 
