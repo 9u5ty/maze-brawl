@@ -1,8 +1,8 @@
 #Defining constants
 hero_order = ["kyle","bryce","george","clara"] #Sets the order of the heroes in character selection
+item_order = ["apple", "beef", "tonic", "bomb"] #Sets the order of the items in the shop
 mp_regen_per_turn = 2 #All heroes regenerate 2MP per turn
 stun_immune_turns = 3 #If a character gets stunned it cannot get stunned in 3 turns
-sell_ratio = 0.5 #Sell price is 0.5x the buy price for all shops
 
 #Hero abilities constants
 vigor_heal = 4 #Kyle's ability heals 4HP at the end of every turn
@@ -58,13 +58,13 @@ gear = {
 moves = {
     #Kyle
     "slash": {"name": "Slash", "mp": 0, "power": 100},
-    "power_strike": {"name": "Stunning Strike", "mp": 8, "power": 175},
+    "power_strike": {"name": "Power Strike", "mp": 8, "power": 175},
     "stunning_strike": {"name": "Stunning Strike", "mp": 8, "power": 100, "stun": True, "chance": 40},
     "second_wind": {"name": "Second Wind", "mp": 10, "heal": 25},
 
     #Bryce
     "berserk": {"name": "Berserk", "mp": 0,"power": 100, "dot": (3, 3, "bleeding"), "chance": 40},
-    "fury": {"name": "Fury", "mp": 8, "power": 150, "debuff": ("def", 0.8, 2), "chance": 3},
+    "fury": {"name": "Fury", "mp": 8, "power": 150, "debuff": ("def", 0.8, 2), "chance": 30},
     "battle_cry": {"name": "Battle Cry", "mp": 6, "self_buff": ("atk", 1.4, 3)},
     "rampage": {"name": "rampage", "mp": 12, "power": 200, "recoil": 10},
 
@@ -94,9 +94,9 @@ heroes = {
     "bryce": {
         "name": "Bryce", "cls": "Berserker", "role": "Attack",
         "hp": 100, "mp": 30, "atk": 15, "def_": 3, "spd": 8, 
-        "weapon": "iron_sword", "armor": None, "items": {"apple": 2, "bomb": 1}, 
-        "moves": ["berserk", "fury", "battle_cry", "rampage"], 
-        "passive": "bloodlust", "passive_desc": "Vigor: +1 ATK per 10 HP missing", 
+        "weapon": "iron_sword", "armor": None, "items": {"apple": 2, "bomb": 1},
+        "moves": ["berserk", "fury", "battle_cry", "rampage"],
+        "passive": "bloodlust", "passive_desc": "Bloodlust: +1 ATK per 10 HP missing",
     },
 
     "george": {
