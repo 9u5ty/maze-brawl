@@ -37,7 +37,7 @@ def load_maze(file_path):
                 optional_monsters.add((x, y))
         maze_map.append(row)
 
-    return maze_map, start_x, start_y, mandatory_monsters, optional_monster
+    return maze_map, start_x, start_y, mandatory_monsters, optional_monsters
 
 # What will returns:
 #maze_map: list[list[str]]

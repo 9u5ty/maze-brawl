@@ -1,5 +1,4 @@
 import textwrap
-
 from data import tag_colors
 
 #Basic game info

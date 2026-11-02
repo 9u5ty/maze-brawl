@@ -4,7 +4,6 @@ from fighters import gear_bonus
 from helpbook import build_help_pages
 from screen_render import (screen_w, center, clear_screen, col, draw_box, flush_keys, get_key, hline, put, show, widest)
 from texts import gear_label, items_label, move_cost, move_summary, stat_text
-
 #Builds helpbook
 def help_screen():
     pages = build_help_pages()
@@ -139,12 +138,10 @@ def draw_hero_details(key):
     hline(10)
     for i, mk in enumerate(h["moves"]):
         mv = moves[mk]
-        put(11 + i, 2, f"{i + 1}. {mv['name']:<15}{move_cost(mv):>5}   "
-                       f"{move_summary(mv)}"[:77])
-#Shows table that compares the four heroes at the bottom of the hero screen
+        put(11 + i, 2, f"{i + 1}. {mv['name']:<15}{move_cost(mv):<8}{move_summary(mv)}"[:77])
+# Shows table that compares the four heroes at the bottom of the hero screen
 def draw_hero_table(sel):
-    put(16, 2, f"{'Hero':<8}{'HP':>3}  {'MP':>3}  {'ATK':<8}{'DEF':<8}{'SPD':>3}  "
-               f"{'Start weapon':<15} Start armor", col(dim=True))
+    put(16, 2, f"{'Hero':<8}{'HP':<5}{'MP':<5}{'ATK':<8}{'DEF':<8}{'SPD':<5}{'Start weapon':<16}Start armor", col(dim=True))
     for i, k in enumerate(hero_order):
         hh = heroes[k]
         a, d = hero_totals(hh)
@@ -154,9 +151,7 @@ def draw_hero_table(sel):
         armor = "-"
         if hh["armor"]:
             armor = gear[hh["armor"]]["name"]
-        row = (f"{hh['name']:<8}{hh['hp']:>3}  {hh['mp']:>3}  "
-               f"{stat_text(hh['atk'], a):<8}{stat_text(hh['def_'], d):<8}"
-               f"{hh['spd']:>3}  {weapon:<15} {armor}")
+        row = f"{hh['name']:<8}{hh['hp']:<5}{hh['mp']:<5}{stat_text(hh['atk'], a):<8}{stat_text(hh['def_'], d):<8}{hh['spd']:<5}{weapon:<16}{armor}"
         put(17 + i, 2, row, col(hero_colors[k], bold=(i == sel), rev=(i == sel)))
 #The top of the hero selection screen, which shows the title, the map name and the four hero names.
 def draw_hero_tabs(mapdef, sel):
@@ -164,7 +159,7 @@ def draw_hero_tabs(mapdef, sel):
     center(0, "CHOOSE YOUR HERO", col("cyan"))
     put(0, 1, mapdef["name"], col(mapdef["color"], bold=True))
     for i, k in enumerate(hero_order):
-        label = f" {i + 1} {heroes[k]['name']} - {heroes[k]['role']}"
+        label = f"{i + 1} {heroes[k]['name']} - {heroes[k]['role']}"
         put(1, 1 + i * 20, f"{label:<19}", col(hero_colors[k], bold=True, rev=(i == sel)))
 #Hero's starting ATK and DEF including starting gear
 def hero_totals(h):
