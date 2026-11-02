@@ -1,7 +1,7 @@
 '''fighters.py
  Responsible for hero/monster creation, stats calculation, damage formula, gear and item logic'''
 
-from data import heroes, monsters, gear, items, sell_ratio, plating
+from data import heroes, monsters, gear, items, sell_ratio, plating, moves
 
 
 def fresh_battle_state():
@@ -22,7 +22,7 @@ def new_player(hero_key):
     h = heroes[hero_key]
     move_list = []
     for move_key in h["moves"]:
-        move_list.append(h["moves"][move_key])
+        move_list.append(moves[move_key])
 
     player_dict = {
         "is_player": True,
@@ -51,7 +51,6 @@ def new_player(hero_key):
 
 
 #Build monster dict, key matches maze text character:
-#"1","2","3","a","b","c","d","e","f","B"
 
 def new_monster(key):
 
@@ -147,8 +146,11 @@ def mult(f, stat):
 
 #Total attack = base_atk × buff‑debuff
 def atk_total(f):
-
-    return base_atk(f) * mult(f, "atk")
+    
+    value = base_atk(f) * mult(f, "atk")
+    if not f["is_player"] and f.get("enraged", False):
+        value *= 1.25
+    return value
 
 
 #Total defense = base_def × buff‑debuff.
