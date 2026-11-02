@@ -1,22 +1,22 @@
-from game.data import gear, hero_colors, items, monsters
+from data import gear, hero_colors, items, monsters
 
-from game.fighters import (
+from fighters import (
     add_item, atk_total, def_total, equip_from_bag, gain_gear,
     gear_bonus, is_upgrade, item_ids_in_bag, item_sell_value,
     remove_item, sell_gear, sell_item, sell_value, slot_of,
     unique, use_food
 )
 
-from game.menus import help_screen
+from menus import help_screen
 
-from game.screen import (
+from screen_render import (
     screen_w, center, clear_screen, col, flush_keys, get_key,
     hline, put, show
 )
 
-from game.state import g
+from state import g
 
-from game.texts import (
+from texts import (
     atk_text, def_text, gear_label, gear_stat_name,
     item_summary, move_cost, move_summary
 )
@@ -138,14 +138,14 @@ def shop_screen(number):
         elif key =="h":
             return help_screen()
         else:
-            cur = move_cursor(k,cur,len(a))
+            cur = move_cursor(key,cur,len(a))
 def inventory_screen():
     data = g["player"]
     cur, notice = 0,""
     while True:
         ent = inventory_entry(data)
         cur = min(cur,max(0,len(ent)-1))
-        draw_inventory(data,ent,cur,notice)
+        draw_inv(data,ent,cur,notice)
         notice = ""
         key = get_key()
         if key in ("ESE","e"):
@@ -157,7 +157,7 @@ def inventory_screen():
         elif key == "h":
             return help_screen()
         else:
-            cur = move_cursor(k,cur,len(ent))
+            cur = move_cursor(key,cur,len(ent))
 
 #labels and selection indicators
 #label for shop

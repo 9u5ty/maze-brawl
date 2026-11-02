@@ -1,7 +1,7 @@
 #Purpose of this is to translate data into texts shown on screen
 
-from game.data import gear, items, item_order
-from game.fighters import atk_total, calc_damage, def_total
+from data import gear, items, item_order
+from fighters import atk_total, calc_damage, def_total
 
 #Verb forms for each DOT (damage over time) effect
 dot_verbs = {"bleeding": "bleed", "poisoned": "poison", "cursed": "curse"}
