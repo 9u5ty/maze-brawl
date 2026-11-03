@@ -1,11 +1,11 @@
 from art import hero_art, monster_art
-from battle import (can_use_move, grant_rewards, log, new_battle, play_round, rows_in_order)
+from battle import can_use_move, grant_rewards, log, new_battle, play_round, rows_in_order
 from data import hero_colors, items, tag_colors
 from fighters import calc_damage, item_ids_in_bag
 from menus import help_screen
-from screen_render import (screen_w, clear_screen, col, draw_box, get_key, hp_color, put, show, widest)
-from state import bs, g
-from texts import (atk_text, battle_summary, def_text, item_summary, move_cost, status_tags)
+from screen_render import clear_screen, col, draw_box, get_key, hp_color, put, show, widest
+from state import g, bs
+from texts import atk_text, battle_summary, def_text, item_summary, move_cost, status_tags
 
 #Runs the battle
 def run_battle(mon):
@@ -37,14 +37,13 @@ def run_battle(mon):
     return b["over"], rewards
 
 #Pack messages into display lines, starts new lines if message does not fit within the terminal
-log_width = screen_w - 2
 def pack_messages(messages):
     lines = []
     line = ""
     for message in messages:
         if line == "":
             line = message
-        elif len(line) + 1 + len(message) <= log_width:
+        elif len(line) + 1 + len(message) <= 78:
             line = line + " " + message
         else:
             lines.append(line)
@@ -73,8 +72,6 @@ def battle_menu(b):
         items = item_ids_in_bag(p)
         draw_battle({"mode": mode, "cur": cur, "items": items})
         k = get_key()
-        if k == "RESIZE": #Battle is not affected by screen resize
-            continue
         if k == "h": #Battle is not affected if help screen is opened
             help_screen()
             continue
@@ -224,7 +221,7 @@ def draw_battle_title(m):
 #The monster's picture and its box (title, name, HP, stats, status tags) at the top
 def draw_monster_box(m):
     art = monster_art[m["t"]["art"]]
-    x = screen_w - widest(art) - 4
+    x = 76 - widest(art)
     for i, line in enumerate(art):
         put(i, x, line, col(m["t"]["color"], bold=True))
     draw_box(0, 1, 5, 42, col(dim=True))

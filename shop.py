@@ -10,7 +10,7 @@ from fighters import (
 from menus import help_screen
 
 from screen_render import (
-    screen_w, center, clear_screen, col, flush_keys, get_key,
+    center, clear_screen, col, flush_keys, get_key,
     hline, put, show
 )
 

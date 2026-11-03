@@ -1,6 +1,6 @@
 import random
 from data import grace_bonus_mp, items, mp_regen_per_turn, stun_immune_turns, vigor_heal
-from fighters import (add_item, calc_damage, fresh_battle_state, gain_gear, heal, remove_item, use_food)
+from fighters import add_item, calc_damage, fresh_battle_state, gain_gear, heal, remove_item, use_food
 
 #Messages are shown in a maximum of 6 rows: The move and effect of both the hero and the enemy, status effect text, and ability activation text.
 battle_rows = ["enemy", "enemy effect", "hero", "hero effect", "status", "ability"]

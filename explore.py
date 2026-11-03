@@ -3,7 +3,7 @@ from battle_screen import run_battle
 from data import hero_colors, items
 from fighters import new_player, reset_monster
 from menus import help_screen
-from screen_render import (clear_screen, col, confirm, flush_keys, get_key, hp_color, popup, put, show)
+from screen_render import clear_screen, col, confirm, flush_keys, get_key, hp_color, popup, put, show
 from shop import inventory_screen, shop_screen
 from state import g
 from texts import atk_text, def_text, gear_label

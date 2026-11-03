@@ -1,7 +1,7 @@
 from art import trophy
 from data import monsters
 from menus import help_screen
-from screen_render import screen_w, center, clear_screen, col, get_key, put, show
+from screen_render import center, clear_screen, col, get_key, put, show
 from state import g
 
 #Shows the victory screen when the player wins
@@ -10,7 +10,7 @@ def victory_screen():
     width = 0
     for line in trophy:
         width = max(width, len(line))
-    left = (screen_w - width) // 2 #Centers ASCII art
+    left = (80 - width) // 2 #Centers ASCII art
     while True:
         clear_screen()
         for i, line in enumerate(trophy):
