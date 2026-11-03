@@ -1,5 +1,5 @@
 from art import grave
-from battle_screen import run_battle
+from battlescreen import run_battle
 from data import hero_colors, items
 from fighters import new_player, reset_monster
 from menus import help_screen

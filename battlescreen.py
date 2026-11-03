@@ -1,14 +1,11 @@
-from game.art import hero_art, monster_art, trophy
-from game.battle import (can_use_move, grant_rewards, log, new_battle,
-                         play_round, rows_in_order)
-from game.data import hero_colors, items, monsters, tag_colors
-from game.fighters import calc_damage, item_ids_in_bag
-from game.menus import help_screen
-from game.screen import (screen_w, center, clear_screen, col, draw_box,
-                         get_key, hp_color, put, show, widest)
-from game.state import bs, g
-from game.texts import (atk_text, battle_summary, def_text, item_summary,
-                        move_cost, status_tags)
+from art import hero_art, monster_art, trophy
+from battle import can_use_move, grant_rewards, log, new_battle, play_round, rows_in_order
+from data import hero_colors, items, monsters, tag_colors
+from fighters import calc_damage, item_ids_in_bag
+from menus import help_screen
+from screen_render import screen_w, center, clear_screen, col, draw_box, get_key, hp_color, put, show, widest
+from state import bs, g
+from texts import atk_text, battle_summary, def_text, item_summary, move_cost, status_tags
 
 
 #if hp/mp full send notice when trying to using corresponding items
@@ -175,21 +172,3 @@ def draw_battle(b, entries, cur, notice, more=False):
     else:
         put(23, 2, "ENTER continue   H help")
     show()
-
-#draw the vitcory screen
-def victory_screen():
-    while True:
-        p, mapdef = g["player"], g["mapdef"]
-        clear_screen()
-        center(2, "VICTORY!")
-        center(4, f"You completed {mapdef['name']}.")
-        center(6, f"{p['name']} defeated {monsters[mapdef['boss']]['name']}.")
-        center(8, f"Monsters slain: {g['kills']}   Times defeated: {g['deaths']}")
-        center(10, f"Gold remaining: {p['gold']}")
-        center(23, "ENTER continue   H help")
-        show()
-        k = get_key()
-        if k == "ENTER":
-            return
-        if k == "h":
-            help_screen()
