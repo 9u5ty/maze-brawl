@@ -36,7 +36,7 @@ def blank_rect(stdscr, top, left, height, width, attr=0):
     
 
 def window_create(windownumber:int, windowname:str, windowtype:str): #Adds window to memory (dict).
-    active_windows[windownumber] = [[windownumber, windowname.lower(), windowtype.lower()],[],[],[]]
+    active_windows[windownumber] = [[windownumber, windowname, windowtype.lower()],[],[],[]]
 
 #Drawing window border. Can use for various window purposes. Planning to have this be part of a custom window making function.
 def draw_border(stdscr, x1:int, y1:int, x2:int, y2:int, windownumber:int):
@@ -61,6 +61,21 @@ def draw_border(stdscr, x1:int, y1:int, x2:int, y2:int, windownumber:int):
 def add_menu_button(windownumber:int, buttonname:str): #adding buttons to an active window.
     active_windows[windownumber][1].append(buttonname)
 
+def clear_window(stdscr, windownumber:int, attr=0):
+    x1, y1, x2, y2 = active_windows[windownumber][2][:4]
+    
+    width = x2 - x1 - 1
+    blank = " " * width
+    
+    # Save / restore current attributes so we don't leak state
+    prev = stdscr.getattrs()
+    try:
+        stdscr.attrset(attr)
+        for y in range(y1 + 1, y2):
+            stdscr.addstr(y, x1 + 1, blank)
+    finally:
+        stdscr.attrset(prev)
+
 
 
 def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:int, rows:int, columns:int):
@@ -74,16 +89,16 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
         raise ValueError("Cannot have padding value below zero!")
     
     x1, y1, x2, y2 = active_windows[windownumber][2][:4]
-    buttons        = active_windows[windownumber][1]
+    buttons = active_windows[windownumber][1]
     if not buttons:
         return None
     
-    inner_left   = x1 + 1
-    inner_top    = y1 + 1
-    inner_width  = (x2 - x1) - 1      # width between the window sides
+    inner_left = x1 + 1
+    inner_top = y1 + 1
+    inner_width = (x2 - x1) - 1      # width between the window sides
     inner_height = (y2 - y1) - 1      # height between the window top and bottom
 
-    cell_width   = max(1, inner_width // columns)   # one column of the grid
+    cell_width  = max(1, inner_width // columns)   # one column of the grid
     cell_height  = 1 + button_padding_y             # 1 text row + vertical gap
     
     def button_rect(index):
@@ -124,8 +139,6 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
             selected = (selected + columns) % total
         elif key in (curses.KEY_ENTER, 10, 13):
             return visible[selected]          # ← the chosen button
-        elif key == 27:                       # ESC
-            return None
    
 
    
