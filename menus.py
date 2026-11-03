@@ -1,6 +1,7 @@
-import screen_render as sr
 import curses
 import sys
+
+import screen_render as sr
 
 
 def main_menu(stdscr):
@@ -25,7 +26,7 @@ def main_menu(stdscr):
     if choice == "Character Selection":
         stdscr.clear()
         character_selection(stdscr)
-    
+
 
 
 def character_selection(stdscr):
@@ -37,5 +38,5 @@ def character_selection(stdscr):
     sr.draw_border(stdscr, 0, 0, 39, 22, 1)
     sr.window_create(2, "Description", "text")
     sr.draw_border(stdscr, 40, 0, 79, 22, 2)
-    
+
     pass

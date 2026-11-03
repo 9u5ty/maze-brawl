@@ -17,11 +17,11 @@ window_active = False
 def setup_colors():
     #creates color and text attribute templates for use in window systems.
     curses.start_color()
-    
+
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_RED,   curses.COLOR_BLACK)
-    
+
     global menu_text_select; menu_text_select = curses.color_pair(1) #base variable
     global menu_text_select_bold; menu_text_select_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_BLINK #when selected with cursor/arrow keys, UI item will blink. Can add more colors later.
     global menu_text; menu_text = curses.color_pair(1) | curses.A_REVERSE
@@ -33,7 +33,7 @@ def blank_rect(stdscr, top, left, height, width, attr=0):
     for y in range(top, top + height):
         stdscr.addstr(y, left, line, attr)
     stdscr.refresh()
-    
+
 
 def window_create(windownumber:int, windowname:str, windowtype:str): #Adds window to memory (dict).
     active_windows[windownumber] = [[windownumber, windowname, windowtype.lower()],[],[],[]]
@@ -63,10 +63,10 @@ def add_menu_button(windownumber:int, buttonname:str): #adding buttons to an act
 
 def clear_window(stdscr, windownumber:int, attr=0):
     x1, y1, x2, y2 = active_windows[windownumber][2][:4]
-    
+
     width = x2 - x1 - 1
     blank = " " * width
-    
+
     # Save / restore current attributes so we don't leak state
     prev = stdscr.getattrs()
     try:
@@ -80,19 +80,19 @@ def clear_window(stdscr, windownumber:int, attr=0):
 
 def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:int, rows:int, columns:int):
     #Draws menu buttons within the window.
-    #using x1, y1, x2, y2, defines dimensions to arrange grids in. 
+    #using x1, y1, x2, y2, defines dimensions to arrange grids in.
     #for rows, column, need to trim button name to fit, display button name on tooltip
-    
+
     if rows < 1 or columns < 1:
         raise ValueError("Cannot have row or column value less than one!")
     if button_padding_x < 0 or button_padding_y < 0:
         raise ValueError("Cannot have padding value below zero!")
-    
+
     x1, y1, x2, y2 = active_windows[windownumber][2][:4]
     buttons = active_windows[windownumber][1]
     if not buttons:
         return None
-    
+
     inner_left = x1 + 1
     inner_top = y1 + 1
     inner_width = (x2 - x1) - 1      # width between the window sides
@@ -100,7 +100,7 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
 
     cell_width  = max(1, inner_width // columns)   # one column of the grid
     cell_height  = 1 + button_padding_y             # 1 text row + vertical gap
-    
+
     def button_rect(index):
         r = index // columns
         c = index % columns
@@ -121,7 +121,7 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
             stdscr.addstr(23, 0, f"{active_windows[windownumber][0][1]}: {active_windows[windownumber][1][selected]}")
         stdscr.refresh()
     #calculate area for buttons, account for padding, rows, columns.
-    
+
     selected = 0
     total = len(visible)
 
@@ -129,9 +129,9 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
         render(selected)
         key = stdscr.getch()
 
-        if key in (curses.KEY_LEFT,  ord('a')): 
+        if key in (curses.KEY_LEFT,  ord('a')):
             selected = (selected - 1) % total #makes the selected button visible
-        elif key in (curses.KEY_RIGHT, ord('d')): 
+        elif key in (curses.KEY_RIGHT, ord('d')):
             selected = (selected + 1) % total
         elif key in (curses.KEY_UP, ord('w')):
             selected = (selected - columns) % total
@@ -139,7 +139,3 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
             selected = (selected + columns) % total
         elif key in (curses.KEY_ENTER, 10, 13):
             return visible[selected]          # ← the chosen button
-   
-
-   
-    

@@ -1,8 +1,8 @@
 import curses
-import sys
-import os
-import screen_render as sr
+
 import menus
+import screen_render as sr
+
 # Just writing some documentation to help planning out the whole game and make things somewhat clearer. #
 
 """
@@ -28,8 +28,8 @@ changing stuff will not break everything else.
 - Game preloading phase:
     - Load the text display file and cache the different text attribute keys.
     - Create initialised display lists for mazes, and windows if needed
-    
-- Main menu phase: 
+
+- Main menu phase:
     - Load main menu to initialise game and load the character selection screen.
 
 
