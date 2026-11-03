@@ -6,6 +6,7 @@
     render_maze(maze_map, player_x, player_y, mandatory_monsters, optional_monsters, dead_monsters)
 """
 
+from data import monsters
 
 #Read maze text file and parse maze data.
 #The file_path is the type of the maze: easy, medium, hard
@@ -23,6 +24,11 @@ def load_maze(file_path):
 
     with open(file_path, "r", encoding="utf-8") as f:
         lines = f.read().splitlines()
+
+    if not lines or any(len(line) != len(lines[0]) for line in lines):
+        raise ValueError("Maze rows must have one consistent width.")
+    if sum(line.count("@") for line in lines) != 1:
+        raise ValueError("A maze must contain exactly one start (@).")
 
     for y, line in enumerate(lines):
         row = list(line)
@@ -80,11 +86,11 @@ def move_player(maze_map, dead_monsters, mandatory_monsters, optional_monsters, 
             return tx, ty, None
 
     # shop S
-    if target_cell == "$":
+    if target_cell in "456":
         return tx, ty, "shop"
 
     # boss B
-    if target_cell == "B":
+    if target_cell == "B" and (tx, ty) not in dead_monsters:
         return tx, ty, "boss_combat"
 
      # exit E
@@ -99,8 +105,7 @@ def move_player(maze_map, dead_monsters, mandatory_monsters, optional_monsters, 
 def mark_monster_dead(dead_monsters, x, y):
     dead_monsters.add((x, y))
 
-def render_maze(maze_map, player_x, player_y, mandatory_monsters, optional_monsters, dead_monsters):
-
+def render_maze(maze_map, player_x, player_y, mandatory_monsters,optional_monsters, dead_monsters, mapdef=None):
 
     output_lines = []
     height = len(maze_map)
@@ -108,19 +113,25 @@ def render_maze(maze_map, player_x, player_y, mandatory_monsters, optional_monst
         line_buf = []
         row = maze_map[y]
         for x in range(len(row)):
+            ch = row[x]
             if x == player_x and y == player_y:
                 line_buf.append("@")
-            elif (x, y) in mandatory_monsters:
-                if (x, y) in dead_monsters:
-                    line_buf.append(".")
-                else:
-                    line_buf.append("M")
-            elif (x, y) in optional_monsters:
-                if (x, y) in dead_monsters:
-                    line_buf.append(".")
-                else:
-                    line_buf.append("m")
+            elif (x, y) in dead_monsters:
+                line_buf.append(" ")
+            elif ch in "456":
+                line_buf.append("$")
+            elif mapdef is not None and ch in "123abcdefB":
+                key = monster_key(mapdef, ch)
             else:
-                line_buf.append(row[x])
+                line_buf.append(ch)
         output_lines.append("".join(line_buf))
     return output_lines
+
+def monster_key(mapdef, ch):
+    if ch in "123":
+        return mapdef["path_monsters"][int(ch) - 1]
+    if ch in "abcdef":
+        return mapdef["optional"][ord(ch) - ord("a")]
+    if ch == "B":
+        return mapdef["boss"]
+    raise ValueError(f"Not a monster marker: {ch!r}")
