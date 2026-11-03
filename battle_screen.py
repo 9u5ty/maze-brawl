@@ -7,11 +7,11 @@ from screen_render import (screen_w, clear_screen, col, draw_box, get_key, hp_co
 from state import bs, g
 from texts import (atk_text, battle_summary, def_text, item_summary, move_cost, status_tags)
 
-# Runs the battle
+#Runs the battle
 def run_battle(mon):
     p = g["player"]
     b = new_battle(p, mon)
-    bs.update(b=b, lines=[], notice="") #Prepare screen state
+    bs.update(b=b, lines=[], notice="") #Prepares new battle screen state
     log(b, f"{mon["name"]} appears!") #Opening message
     show_round(b)
     while not b["over"]: #Keep asking for move choice until fight ends
@@ -152,7 +152,7 @@ def move_effect_text(mv, dmg):
         return f"heal {mv["heal"]}"
     return "buff" #Buff
 
-#Navigating 2x2 grid, for choosing move/item
+#Navigating 2x2 grid for choosing move/item
 def move_in_grid(k, cur, n):
     if k == "UP" or k == "DOWN": #Vertical navigation
         other = (cur + 2) % 4
@@ -205,7 +205,7 @@ def grid_menu_key(b, mode, cur, k, items):
     if notice == "":
         return mode, cur, "", ("item", items[cur])
     return mode, cur, notice, None
-# The warning when an item would be wasted
+#The warning when an item would be wasted
 def item_refusal(p, item_id):
     it = items[item_id]
     if "hp" in it and "mp" not in it and p["hp"] >= p["max_hp"]:
@@ -214,14 +214,14 @@ def item_refusal(p, item_id):
         return "MP is already full!"
     return ""
 
-# The title of the battle, written into the top line of the monster's box
+#The title of the battle, written into the top line of the monster's box
 def draw_battle_title(m):
     if m["boss"]: #For boss
         put(0, 3, " !!! BOSS BATTLE !!! ", col("red", bold=True))
     else: #For regular battle
         put(0, 3, " BATTLE ", col("green", bold=True))
 
-# The monster's picture and its box (title, name, HP, stats, status tags) at the top
+#The monster's picture and its box (title, name, HP, stats, status tags) at the top
 def draw_monster_box(m):
     art = monster_art[m["t"]["art"]]
     x = screen_w - widest(art) - 4
@@ -238,7 +238,7 @@ def draw_monster_box(m):
     put(2, 3, f"HP {m["hp"]}/{m["max_hp"]}", col(hp_color(m["hp"], m["max_hp"]), bold=True))
     put(3, 3, f"ATK {atk_text(m)}  DEF {def_text(m)}  SPD {m["spd"]}", col(dim=True))
     draw_tags(2, 15, status_tags(m), 26)
-# The hero's picture and its box (name, HP, MP, stats, status tags) at the bottom
+#The hero's picture and its box (name, HP, MP, stats, status tags) at the bottom
 def draw_hero_box(p):
     for i, line in enumerate(hero_art[p["key"]]):
         put(8 + i, 4, line, col(hero_colors[p["key"]], bold=True))
@@ -248,7 +248,7 @@ def draw_hero_box(p):
     put(12, 41, f"HP {p["hp"]}/{p["max_hp"]}", col(hp_color(p["hp"], p["max_hp"]), bold=True))
     put(12, 58, f"MP {p["mp"]}/{p["max_mp"]}", col("cyan", bold=True))
     put(13, 41, f"ATK {atk_text(p)}  DEF {def_text(p)}  SPD {p["spd"]}", col(dim=True))
-# Draw status tags such as <STUN> in its respective color
+#Draw status tags in its respective color
 def draw_tags(y, x, tags, room):
     used = 0
     for tag in tags:

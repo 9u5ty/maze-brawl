@@ -155,7 +155,7 @@ def end_of_round(b):
                 return
         wear_off_buffs(f) #Buff countdown for ATK/DEF buffs
     passives_and_mp(b)
-# Heal over time function
+#Heal over time function
 def heal_over_time(b, f):
     if "hot" not in f["status"]:
         return
@@ -200,7 +200,7 @@ def play_round(b, action):
     if not b["over"]:
         end_of_round(b) #If the battle is not over, perform end of round effects
 
-# After defeating an enemy, drop (random amount of) gold and (possibly) gear
+#After defeating an enemy, drop (random amount of) gold and (possibly) gear
 def grant_rewards(b): #Determines gold reward of battle
     p, m = b["p"], b["m"]
     low, high = m["gold"]
