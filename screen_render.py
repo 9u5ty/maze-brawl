@@ -88,7 +88,7 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
     if button_padding_x < 0 or button_padding_y < 0:
         raise ValueError("Cannot have padding value below zero!")
 
-    x1, y1, x2, y2 = active_windows[windownumber][2][:4]
+    x1, y1, x2 = active_windows[windownumber][2][:3]
     buttons = active_windows[windownumber][1]
     if not buttons:
         return None
@@ -96,7 +96,6 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
     inner_left = x1 + 1
     inner_top = y1 + 1
     inner_width = (x2 - x1) - 1      # width between the window sides
-    inner_height = (y2 - y1) - 1      # height between the window top and bottom
 
     cell_width  = max(1, inner_width // columns)   # one column of the grid
     cell_height  = 1 + button_padding_y             # 1 text row + vertical gap
@@ -111,13 +110,16 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
 
     visible = buttons[: rows * columns]   #no pages so far I don't want to implement that hellish thing
 
+    if active_windows[windownumber + 1][0][0] == "Description" and active_windows[windownumber + 1][0][1] == "text":
+        pass
+    
     def render(selected):
         for i, name in enumerate(visible):
             bx, by, bw = button_rect(i)
             label = name[:bw].ljust(bw)
             attr  = menu_text_select_bold if i == selected else menu_text
             stdscr.addstr(by, bx, label, attr)
-            stdscr.addstr(23, 0, f"                                                                    ")
+            blank_rect(stdscr, 23, 0, 1, 79)
             stdscr.addstr(23, 0, f"{active_windows[windownumber][0][1]}: {active_windows[windownumber][1][selected]}")
         stdscr.refresh()
     #calculate area for buttons, account for padding, rows, columns.
@@ -139,3 +141,5 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
             selected = (selected + columns) % total
         elif key in (curses.KEY_ENTER, 10, 13):
             return visible[selected]          # ← the chosen button
+        elif key == 27:
+            return "escape"
