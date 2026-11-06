@@ -132,11 +132,7 @@ def blackout():
     p["hp"], p["mp"] = p["max_hp"], p["max_mp"]
     g["px"], g["py"] = g["maze"]["start"]
     draw_explore()
-    popup(list(grave) + ["", 
-                         f"{p['name']} was defeated...",
-                         f"You wake at the start of the maze. Lost {lost} gold.", "",
-                         ("Press ENTER to try again", "green")],
-          "DEFEATED", border="red")
+    popup(list(grave) + ["", f"{p['name']} was defeated...", f"You wake at the start of the maze. Lost {lost} gold.", "", ("Press ENTER to try again", "green")], "DEFEATED", border="red")
     say(f"You blacked out and lost {lost} gold. Try again!")
 
 #Popup after winning a battle
@@ -144,9 +140,7 @@ def show_spoils(mon, rewards):
     gold, drops = rewards 
     draw_explore()
     if mon["boss"]:
-        popup([(f"{mon['name'].upper()} IS DEFEATED!", "green"), "",
-               "Walk onto the exit  E  to escape!", "",
-               ("Press ENTER to continue", "green")], "VICTORY", border="green")
+        popup([(f"{mon['name'].upper()} IS DEFEATED!", "green"), "", "Walk onto the exit  E  to escape!", "", ("Press ENTER to continue", "green")], "VICTORY", border="green")
         say("The boss is down! Reach the exit E!")
         return
     gear_line = "Gear: none" #Separate row for gear and item
@@ -172,4 +166,3 @@ def monster_popup(mon):
     if mon["optional"]:
         tag = "  (optional)"
     return [f"{mon['name']}{tag}", stats, you, "", "Fight it?"], "yellow"
-
