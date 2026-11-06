@@ -1,25 +1,14 @@
 from data import gear, hero_colors, items, monsters
 
-from fighters import (
-    add_item, atk_total, def_total, equip_from_bag, gain_gear,
-    gear_bonus, is_upgrade, item_ids_in_bag, item_sell_value,
-    remove_item, sell_gear, sell_item, sell_value, slot_of,
-    unique, use_food
-)
+from fighters import add_item, atk_total, def_total, equip_from_bag, gain_gear, gear_bonus, is_upgrade, item_ids_in_bag, item_sell_value, remove_item, sell_gear, sell_item, sell_value, slot_of, unique, use_food
 
 from menus import help_screen
 
-from screen_render import (
-    center, clear_screen, col, flush_keys, get_key,
-    hline, put, show
-)
+from screen_render import center, clear_screen, col, flush_keys, get_key, hline, put, show
 
 from state import g
 
-from texts import (
-    atk_text, def_text, gear_label, gear_stat_name,
-    item_summary, move_cost, move_summary
-)
+from texts import atk_text, def_text, gear_label, gear_stat_name, item_summary, move_cost, move_summary
 #build the core function first
 # show the price of the item, pro means the product player may intend to buy
 def price_of(ident):
