@@ -1,5 +1,5 @@
 import random
-from data import grace_bonus_mp, items, mp_regen_per_turn, stun_immune_turns, vigor_heal
+from data import items
 from fighters import add_item, calc_damage, fresh_battle_state, gain_gear, heal, remove_item, use_food
 
 #Messages are shown in a maximum of 6 rows: The move and effect of both the hero and the enemy, status effect text, and ability activation text.
@@ -84,7 +84,7 @@ def check_enrage(b):
     if m["hp"] > enrage_at * m["max_hp"]:
         return
     m["enraged"] = True
-    m["status"]["atk"] = [1.25, 999]
+    m["status"]["atk"] = [1.25, float("inf")]
     log_ability(b, f"{m["short"]} is enraged!")
 #Check if battle is over
 def check_over(b):
@@ -103,7 +103,7 @@ def player_acts(b, action):
     p = b["p"]
     if p["stunned"]: #Checks for stun (and stun immunity)
         p["stunned"] = False
-        p["stun_immune"] = stun_immune_turns
+        p["stun_immune"] = 3
         log(b, f"{p["name"]} is stunned and can't move!")
     elif action[0] == "item": #Checks if hero used item
         item = items[action[1]]
@@ -132,7 +132,7 @@ def monster_acts(b):
     m = b["m"]
     if m["stunned"]: #Checks for stun (and stun immunity)
         m["stunned"] = False
-        m["stun_immune"] = stun_immune_turns
+        m["stun_immune"] = 3
         log(b, f"{m["short"]} is stunned and can't move!")
     elif m["charging"]: #Checks for charging for bosses
         mv = m["charging"]
@@ -282,10 +282,10 @@ def apply_target_effects(b, target, mv):
 def passives_and_mp(b):
     p = b["p"]
     if p["passive"] == "vigor" and p["hp"] > 0: #Kyle's passive Vigor, which does healing
-        got = heal(p, vigor_heal)
+        got = heal(p, 4)
         if got:
             log_ability(b, f"{p["name"]}'s vigor heals {got} HP.")
-    regen = mp_regen_per_turn
+    regen = 2
     if p["passive"] == "grace": #Clara's passive Grace, which increases MP regeneration rate
-        regen += grace_bonus_mp
+        regen += 1
     p["mp"] = min(p["max_mp"], p["mp"] + regen)

@@ -1,7 +1,7 @@
 '''fighters.py
  Responsible for hero/monster creation, stats calculation, damage formula, gear and item logic'''
 
-from data import heroes, monsters, gear, items, sell_ratio, plating, moves
+from data import heroes, monsters, gear, items, moves
 
 
 def fresh_battle_state():
@@ -148,8 +148,6 @@ def mult(f, stat):
 def atk_total(f):
     
     value = base_atk(f) * mult(f, "atk")
-    if not f["is_player"] and f.get("enraged", False):
-        value *= 1.25
     return value
 
 
@@ -178,7 +176,7 @@ def calc_damage(user, target, mv):
     damage = max(1, round(damage))
 
     if target["is_player"] and target["passive"] == "plating":
-        damage = max(1, damage - plating)
+        damage = max(1, damage - 2)
     return damage
 
 #Heal fighter, cannot exceed max_hp.
@@ -255,7 +253,7 @@ def item_sell_value(item_id):
     
     if item_id not in items:
         return 0
-    return int(items[item_id]["price"] * sell_ratio)
+    return int(items[item_id]["price"] * 0.5)
 
 
 #Sell one stack‑count of item, add gold. Item entry removed when count hits zero.
