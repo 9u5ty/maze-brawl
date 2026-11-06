@@ -1,13 +1,6 @@
 #Defining constants
 hero_order = ["kyle","bryce","george","clara"] #Sets the order of the heroes in character selection
 item_order = ["apple", "beef", "tonic", "bomb"] #Sets the order of the items in the shop
-mp_regen_per_turn = 2 #All heroes regenerate 2MP per turn
-stun_immune_turns = 3 #If a character gets stunned it cannot get stunned in 3 turns
-
-#Hero abilities constants
-vigor_heal = 4 #Kyle's ability heals 4HP at the end of every turn
-plating = 2 #George's ability makes damage -2
-grace_bonus_mp = 1 #Clara's ability regenerates 1 extra MP per turn
 
 #Defining colors
 #Gives each hero its respective color in game
