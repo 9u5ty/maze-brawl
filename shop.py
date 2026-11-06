@@ -66,7 +66,7 @@ def use_entry(data,kind,ident):
     if data["items"].get(ident, 0) <= 0:
         return "You don't have that item."
     info = items[ident]
-    if info.get("combat only",False):
+    if info.get("combat_only",False):
         return "This item can only be used in combat."
     if "hp" in info and data["hp"] >= data["max_hp"]:
         return "Your HP is already full."

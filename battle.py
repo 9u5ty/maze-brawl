@@ -84,7 +84,7 @@ def check_enrage(b):
     if m["hp"] > enrage_at * m["max_hp"]:
         return
     m["enraged"] = True
-    m["status"]["atk"] = [1.25, 999]
+    m["status"]["atk"] = [1.25, float("inf")]
     log_ability(b, f"{m["short"]} is enraged!")
 #Check if battle is over
 def check_over(b):

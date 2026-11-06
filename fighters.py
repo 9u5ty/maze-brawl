@@ -148,8 +148,6 @@ def mult(f, stat):
 def atk_total(f):
     
     value = base_atk(f) * mult(f, "atk")
-    if not f["is_player"] and f.get("enraged", False):
-        value *= 1.25
     return value
 
 
