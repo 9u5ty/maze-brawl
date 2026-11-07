@@ -32,6 +32,9 @@ def main_menu(stdscr):
         stdscr.clear()
         sys.exit(0)
 
+def help_menu(stdscr):
+    pass
+
 
 def character_selection(stdscr):
     curses.curs_set(0)
