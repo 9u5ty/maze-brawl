@@ -100,6 +100,15 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
     next_window_name = active_windows[windownumber + 1][0][0] if len(active_windows) > 1 else None
     next_window_type = active_windows[windownumber + 1][0][1] if len(active_windows) > 1 else None
 
+    has_description = (
+        windownumber + 1 in active_windows
+        and active_windows[windownumber + 1][0] == ["Description", "text"]
+    )
+
+    if has_description:
+        display_text = list(active_windows[windownumber + 1][1])
+        display_x1, display_y1, display_x2, display_y2 = active_windows[windownumber + 1][2][:4]
+
     def button_rect(index):
         r = index // columns
         c = index % columns
@@ -125,37 +134,40 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
 # have to wrap inside of that, so x1 = 41, y1 = 1, x2 = 78, y2 = 21
 
     def render(selected):
+        #tooltip draws once, depends on button.
+        tip_y = min(23, curses.LINES - 1)
+        blank_rect(stdscr, tip_y, 0, 1, min(79, curses.COLS))
+        tip = f"{active_windows[windownumber][0][0]}: {buttons[selected]}"
+        stdscr.addstr(tip_y, 0, tip[:curses.COLS - 1])
+
+        #buttons
         for i, name in enumerate(visible):
             bx, by, bw = button_rect(i)
             label = name[:bw].ljust(bw)
-            attr  = menu_text_select_bold if i == selected else menu_text
+            attr = menu_text_select_bold if i == selected else menu_text
             stdscr.addstr(by, bx, label, attr)
-            blank_rect(stdscr, 23, 0, 1, 79)
-            stdscr.addstr(23, 0, f"{active_windows[windownumber][0][1]}: {active_windows[windownumber][1][selected]}")
-            if len(active_windows) <= 1:
-                pass
-            else:
-                if active_windows[windownumber + 1][0][0] == "Description" and active_windows[windownumber + 1][0][1] == "text":
-                    clear_window(stdscr, windownumber + 1)
-                    char = 0
-                    character = display_text[selected][char]
-    
-                    for i in range(display_width - 2):
-                        for j in range(display_height - 2):
-    
-                            if display_text[selected][char] + display_text[selected][char + 1] == "\n" and j < display_height - 3:
-                                i += 2
-                                j += 1
-                                char += 2
-                                stdscr.addstr(j, i, character, menu_text)
-                                char += 1
-    
-    
-                            if i <= display_width - 2 and j <=display_height - 2:
-                                stdscr.addstr(j, i, character, menu_text)
-                                char += 1
 
-
+        #menu item description, with text wrapping
+        if has_description:
+            clear_window(stdscr, windownumber + 1)
+            if selected < len(display_text):
+                text = display_text[selected]
+                row = display_y1 + 1
+                col = display_x1 + 1
+                max_col = display_x2 - 1
+                max_row = display_y2 - 1
+                for ch in text:
+                    if ch == "\n":
+                        row += 1
+                        col = display_x1 + 1
+                        continue
+                    if col >= max_col:
+                        row += 1
+                        col = display_x1 + 1
+                    if row >= max_row:
+                        break
+                    stdscr.addstr(row, col, ch, menu_text)
+                    col += 1
 
         stdscr.refresh()
     #calculate area for buttons, account for padding, rows, columns.
@@ -165,11 +177,9 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
 
     while True:
         render(selected)
-        if len(active_windows) > 1 and active_windows[windownumber + 1][0][0] == "Description" and active_windows[windownumber + 1][0][1] == "text":
-            draw_border(stdscr, x1, y1, x2, y2, windownumber)
-            draw_border(stdscr, display_x1, display_y1, display_x2, display_y2,windownumber + 1)
-        else:
-            draw_border(stdscr, x1, y1, x2, y2, windownumber)
+        draw_border(stdscr, x1, y1, x2, y2, windownumber)
+        if has_description:
+            draw_border(stdscr, display_x1, display_y1, display_x2, display_y2, windownumber + 1)
         key = stdscr.getch()
 
         if key in (curses.KEY_LEFT,  ord('a')):

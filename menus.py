@@ -51,6 +51,7 @@ def character_selection(stdscr):
     sr.add_menu_button(2, "Bryce is an attacker.\nHe is good at attacking.")
     sr.add_menu_button(2, "Placeholder, will add full text soon.")
     sr.add_menu_button(2, "Another Placeholder. I will add text soon, this is a test to see if wrapping works or not.")
+    sr.add_menu_button(2, "Goes back to main menu.")
     choice = sr.draw_menu(stdscr, 1, 1, 1, 5, 1)
     if choice == data.heroes["kyle"]["name"]:
         stdscr.clear()

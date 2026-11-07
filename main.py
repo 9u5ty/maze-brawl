@@ -42,8 +42,10 @@ changing stuff will not break everything else.
 
 def main(stdscr):
     sr.setup_colors()
+    height, width = stdscr.getmaxyx()
+    if height < 24 or width < 80:
+        stdscr.addstr()
+
     menus.main_menu(stdscr)
 
 curses.wrapper(main)
-
-import curses
