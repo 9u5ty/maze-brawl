@@ -84,13 +84,37 @@ Prompts (in order):
 - The title block still looks weird, can you fix it?
 
 Outputs used:
-- Many bugs/oversights in the code AI pointed out
-- Redundancies and unused parts of code AI pointed out
+- Added a few minor parts of code in order for some functions to work properly
+- Fixed any bugs/oversights in the code AI pointed out
+- Removed redundancies and unused parts of code AI pointed out
   
 Files/materials affected: battle.py, battlescreen.py, data.py, explore.py, fighters.py, main.py, maze_system.py, menus.py, screen_render.py, shop.py, texts.py
 
 What we kept, changed or rejected: There was a large amount of problems. Using the fixes AI suggested, we fixed our code to make sure the code does not have any errors.
 
 How we checked it; tests and corrections: We ran the game and inspected whether the issues still persisted. While most errors were fixed as expected, one that persisted during manual testing was the title block art which still looked weird, so we followed up with a prompt that told ChatGPT to fix that error.
+
+## Entry 04
+
+Member and date: Shum Tin Yu (Eric), Nov 8
+
+Tool and model/version, where available: ChatGPT (GPT-6.1 Sol)
+
+Purpose: Creating README.md instructions for Windows users (I do not own a Windows device, so I do not know how to load in that environment)
+
+Relevant prompts and outputs used, or retained transcript location:
+
+Prompts (in order):
+- Update README.md to update how to run the game on Windows
+
+Outputs used:
+- The method to run the game on a Windows device
+- AI also added an additional instruction to install Python, so we kept that too
+  
+Files/materials affected: README.md
+
+What we kept, changed or rejected: We liked the formatting for the Windows instructions, so we kept it and also changed our formatting for the Mac instructions.
+
+How we checked it; tests and corrections: N/A, as this is README.md
 
 Keep evidence accessible to the teaching team. Remove credentials and unrelated personal information. Submit the completed file as `ai_use.md` with the project.
