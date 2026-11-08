@@ -194,7 +194,7 @@ def draw_battle(b, entries, cur, notice, more=False, animate=False):
     else:
         put(23, 2, "ENTER continue   H help")
     show()
-    #Reveal each battle message one character at a time
+    #Print battle message one character at a time at 0.02s intervals
     if animate:
         for i, line in enumerate(bs["lines"][top:top + 6]):
             for column, character in enumerate(line[:78], 2):
