@@ -59,7 +59,7 @@ moves = {
     "berserk": {"name": "Berserk", "mp": 0,"power": 100, "dot": (3, 3, "bleeding"), "chance": 40},
     "fury": {"name": "Fury", "mp": 8, "power": 150, "debuff": ("def", 0.8, 2), "chance": 30},
     "battle_cry": {"name": "Battle Cry", "mp": 6, "self_buff": ("atk", 1.4, 3)},
-    "rampage": {"name": "rampage", "mp": 12, "power": 200, "recoil": 10},
+    "rampage": {"name": "Rampage", "mp": 12, "power": 200, "recoil": 10},
 
     #George
     "iron_fist": {"name": "Iron Fist", "mp": 0, "power": 100, "debuff": ("atk", 0.8, 2), "chance": 30},

@@ -137,11 +137,14 @@ def base_def(f):
 
 #Get stat buff/debuff multiplier.
 #stat: "atk" or "def". Return 1.0 when no status effect present.
+#Also accounts for the attack buff for when boss is enraged
 def mult(f, stat):
 
     if stat in f["status"]:
         return f["status"][stat][0]
-    return 1.0
+    if stat == "atk" and f.get("enraged"):
+        factor *= 1.25
+    return factor
 
 
 #Total attack = base_atk × buff‑debuff

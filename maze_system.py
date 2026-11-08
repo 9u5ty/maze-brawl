@@ -1,12 +1,6 @@
-"""
-4 function in the maze system:
-    load_maze(file_path)
-    move_player(maze_map, dead_monsters, mandatory_monsters, optional_monsters, px, py, dx, dy)
-    mark_monster_dead(dead_monsters, x, y)
-    render_maze(maze_map, player_x, player_y, mandatory_monsters, optional_monsters, dead_monsters)
-"""
-
+from pathlib import Path
 from data import monsters
+from fighters import new_monster
 
 #Read maze text file and parse maze data.
 #The file_path is the type of the maze: easy, medium, hard
@@ -25,10 +19,6 @@ def load_maze(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         lines = f.read().splitlines()
 
-    if not lines or any(len(line) != len(lines[0]) for line in lines):
-        raise ValueError("Maze rows must have one consistent width.")
-    if sum(line.count("@") for line in lines) != 1:
-        raise ValueError("A maze must contain exactly one start (@).")
 
     for y, line in enumerate(lines):
         row = list(line)
@@ -122,6 +112,7 @@ def render_maze(maze_map, player_x, player_y, mandatory_monsters,optional_monste
                 line_buf.append("$")
             elif mapdef is not None and ch in "123abcdefB":
                 key = monster_key(mapdef, ch)
+                line_buf.append(monsters[key]["glyph"])
             else:
                 line_buf.append(ch)
         output_lines.append("".join(line_buf))
@@ -135,3 +126,62 @@ def monster_key(mapdef, ch):
     if ch == "B":
         return mapdef["boss"]
     raise ValueError(f"Not a monster marker: {ch!r}")
+
+maps_dir = Path(__file__).resolve().parent / "maps"
+def load_map(mapdef):
+    rows, sx, sy, _, _ = load_maze(maps_dir / mapdef["file"])
+    maze = {
+        "def": mapdef,
+        "start": (sx, sy),
+        "wall": [],
+        "entities": []
+    }
+    for y, row in enumerate(rows):
+        maze["wall"].append([ch == "#" for ch in row])
+        for x, ch in enumerate(row):
+            if ch in "123abcdefB":
+                maze["entities"].append({
+                    "kind": "monster",
+                    "x": x,
+                    "y": y,
+                    "dead": False,
+                    "mon": new_monster(monster_key(mapdef, ch))
+                })
+            elif ch in "456E":
+                entity = {
+                    "kind": "exit" if ch == "E" else "shop",
+                    "x": x,
+                    "y": y,
+                    "dead": False
+                }
+                if ch != "E":
+                    entity["shop"] = int(ch) - 4
+                maze["entities"].append(entity)
+    return maze
+
+def entity_at(maze, x, y):
+    for e in maze["entities"]:
+        if e["x"] == x and e["y"] == y and not e["dead"]:
+            return e
+    return None
+
+def is_blocked(maze, x, y):
+    if not (0 <= x < 79 and 0 <= y < 19):
+        return True
+    if maze["wall"][y][x]:
+        return True
+    e = entity_at(maze, x, y)
+    if e is not None and e["kind"] == "monster":
+        return True
+    return False
+
+dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+def nearby(maze, x, y):
+    e = entity_at(maze, x, y)
+    if e and e["kind"] == "shop":
+        return e
+    for dx, dy in dirs:
+        e = entity_at(maze, x + dx, y + dy)
+        if e and e["kind"] == "monster":
+            return e
+    return None

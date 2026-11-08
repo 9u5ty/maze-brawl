@@ -21,7 +21,7 @@ def effect_texts(mv):
     if "debuff" in mv: #Output for attack/defense debuffs
         stat, amount, turns = mv["debuff"]
         if mv.get("power"): #If the move is a damaging move and debuff is a secondary effect
-            out.append(f"{pre}lower enemy {stat.upper()} for {turns} turns") 
+            out.append(f"Your {stat.upper()} {round((amount - 1) * 100):+d}% for {turns} turns")
         else: #If the debuff is a primary effect of the move
             out.append(f"Enemy {stat.upper()} -{round((1 - amount) * 100)}% for {turns} turns")    
     if mv.get("charge"): #Output for charge
@@ -142,8 +142,8 @@ def battle_summary(mv, user, target):
 
 #Shows the starting items (with their number) each character starts with in starting screen
 def items_label(item_counts):
-    parts = [] 
+    parts = []
     for item_id in item_order:
         if item_counts.get(item_id):
             parts.append(f"{item_counts[item_id]} {items[item_id]['name']}")
-    return ", ".join(parts)
+    return ", ".join(parts) or "none"

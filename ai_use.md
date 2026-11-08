@@ -47,5 +47,26 @@ What we kept, changed or rejected: We decided to adopt the names
 
 How we checked it; tests and corrections: N/A
 
+## Entry 02
+
+Member and date: Shum Tin Yu (Eric), Oct 27
+
+Tool and model/version, where available: Claude Sonnet 5.5
+
+Purpose: Creating ASCII art for enemies
+
+Relevant prompts and outputs used, or retained transcript location:
+
+Prompts (in order):
+- Create ASCII art for the heroes and enemies. Keep the hero below 20x7 (width x height). Keep enemies below 33x10 (width x height).
+
+Outputs used:
+- The ASCII sprites for all characters
+  
+Files/materials affected: art.py
+
+What we kept, changed or rejected: We used most of the ASCII sprites, but made minor modifications manually
+
+How we checked it; tests and corrections: We looked through the ASCII sprites and inspected whether it looks good or not
 
 Keep evidence accessible to the teaching team. Remove credentials and unrelated personal information. Submit the completed file as `ai_use.md` with the project.

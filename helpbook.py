@@ -40,16 +40,16 @@ legend = [
 #This shows what all the statuses mean
 status_help = [
     (["<STUN>"],
-     "The fighter loses its next turn, then cannot be stunned again for 3 turns."),
+     "The fighter loses its next turn, then cannot be stunned again for 3 rounds."),
     (["<BLEED> <POISON>", "<CURSE>"],
-     "Damage at the end of every turn for 3 turns. The same kind of hit starts "
-     "it over."),
+     "Damage at the end of every turn for 3 turns. A new effect replaces "
+     "the old one."),
     (["<ATK+> <DEF+>"],
      "Attack / defense raised for a few turns."),
     (["<ATK-> <DEF->"],
      "Attack / defense lowered for a few turns."),
     (["<REGEN>"],
-     "Heals 15% of max HP at the end of each turn for 3 turns."),
+     "Heals 15% of max HP at the end of each turn for 3 rounds."),
     (["<CHARGE>"],
      "A monster is charging a big attack. It fires on its next turn!"),
 ]

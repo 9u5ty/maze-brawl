@@ -1,7 +1,7 @@
 from art import hero_art, monster_art, trophy
 from battle import can_use_move, grant_rewards, log, new_battle, play_round, rows_in_order
 from data import hero_colors, items, monsters, tag_colors
-from fighters import calc_damage, item_ids_in_bag
+from fighters import calc_damage, fresh_battle_state, item_ids_in_bag
 from menus import help_screen
 from screen_render import screen_w, center, clear_screen, col, draw_box, get_key, hp_color, put, show, widest
 from state import bs, g
@@ -110,6 +110,7 @@ def finish_battle(b):
         draw_battle(b, [], 0, f"Battle result: {b['over']}")
         k = get_key()
         if k == "ENTER":
+            b["p"].update(fresh_battle_state())
             return b["over"], rewards
         if k == "h":
             help_screen()

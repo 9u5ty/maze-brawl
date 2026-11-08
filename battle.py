@@ -84,18 +84,17 @@ def check_enrage(b):
     if m["hp"] > enrage_at * m["max_hp"]:
         return
     m["enraged"] = True
-    m["status"]["atk"] = [1.25, float("inf")]
     log_ability(b, f"{m["short"]} is enraged!")
 #Check if battle is over
 def check_over(b):
     if b["over"]:
         return
-    if b["m"]["hp"] <= 0: #If enemy dies
-        b["over"] = "win"
-        log_ability(b, f"{b["m"]["short"]} is defeated!")
-    elif b["p"]["hp"] <= 0: #If hero dies
+    if b["p"]["hp"] <= 0: #If hero dies
         b["over"] = "lose"
         log_ability(b, f"{b["p"]["name"]} collapses...")
+    elif b["m"]["hp"] <= 0: #If enemy dies
+            b["over"] = "win"
+            log_ability(b, f"{b["m"]["short"]} is defeated!")
 
 # The hero's turn: skip it if stunned, otherwise use an item or a move.
 def player_acts(b, action):
@@ -103,7 +102,7 @@ def player_acts(b, action):
     p = b["p"]
     if p["stunned"]: #Checks for stun (and stun immunity)
         p["stunned"] = False
-        p["stun_immune"] = 3
+        p["stun_immune"] = 4 #4 instead of 3, because it is 3 rounds immunity EXCLUDING current round
         log(b, f"{p["name"]} is stunned and can't move!")
     elif action[0] == "item": #Checks if hero used item
         item = items[action[1]]
@@ -132,7 +131,7 @@ def monster_acts(b):
     m = b["m"]
     if m["stunned"]: #Checks for stun (and stun immunity)
         m["stunned"] = False
-        m["stun_immune"] = 3
+        m["stun_immune"] = 4 #4 instead of 3, because it is 3 rounds immunity EXCLUDING current round
         log(b, f"{m["short"]} is stunned and can't move!")
     elif m["charging"]: #Checks for charging for bosses
         mv = m["charging"]
@@ -148,8 +147,9 @@ def end_of_round(b):
             f["stun_immune"] -= 1
         if f["hp"] > 0: #Checks for heal over time
             heal_over_time(b, f)
-        if "dot" in f["status"] and f["hp"] > 0: #Checks for damage over time
+        if "dot" in f["status"] and f["hp"] > 0: #Checks for damage over time, and enrage if boss
             damage_over_time(b, f)
+            check_enrage(b)
             check_over(b)
             if b["over"]:
                 return
