@@ -77,13 +77,18 @@ def character_selection(stdscr):
     for hero_key in data.hero_order:
         hero = data.heroes[hero_key]
         sr.add_menu_button(1, hero["name"])
+        starting_items = ", ".join(
+            f"{data.items[item_id]['name']} x{count}"
+            for item_id, count in hero["items"].items()
+        )
         description = (
             f"{hero['name']}: {hero['cls']} ({hero['role']})\n"
             f"{hero['passive_desc']}\n\n"
             f"HP: {hero['hp']}  MP: {hero['mp']}\n"
             f"ATK: {hero['atk']}  DEF: {hero['def_']}  SPD: {hero['spd']}\n"
             f"Weapon: {gear_label(hero['weapon'])}\n"
-            f"Armor: {gear_label(hero['armor'])}\n\n"
+            f"Armor: {gear_label(hero['armor'])}\n"
+            f"Items: {starting_items}\n\n"
             + "\n".join(hero_art[hero_key])
         )
         sr.add_menu_button(2, description)
