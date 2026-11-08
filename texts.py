@@ -90,7 +90,7 @@ def status_tags(f):
         tags.append("CHARGE")
     return tags
 
-#Gear description (in character selection screen and shop)
+#Gear description
 def gear_label(gear_id):
     if not gear_id: 
         return "none" #This is here because some characters may not have starting gear
