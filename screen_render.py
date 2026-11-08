@@ -237,7 +237,7 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
                         col = display_x1 + 1
                     if row >= max_row:
                         break
-                    stdscr.addstr(row, col, ch, menu_text)
+                    stdscr.addstr(row, col, ch)
                     col += 1
 
         stdscr.refresh()
