@@ -85,7 +85,7 @@ Prompts (in order):
 
 Outputs used:
 - Many bugs/oversights in the code AI pointed out
-- Redundancies and unused parts of code AI pointed out
+- Multiple redundancies, repeated parts, and unused parts of code AI pointed out
   
 Files/materials affected: battle.py, battlescreen.py, data.py, explore.py, fighters.py, main.py, maze_system.py, menus.py, screen_render.py, shop.py, texts.py
 
