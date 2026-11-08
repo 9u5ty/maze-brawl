@@ -91,7 +91,7 @@ Outputs used:
   
 Files/materials affected: battle.py, battlescreen.py, data.py, explore.py, fighters.py, main.py, maze_system.py, menus.py, screen_render.py, shop.py, texts.py
 
-What we kept, changed or rejected: There was a large amount of problems. Using the fixes AI suggested, we first inspected the fixes and determined whether the fix was valid. Then we fixed our code to make sure the code does not have any errors. There were a few changes the AI suggested but we did not implement, but we did choose to implement the battle text output suggestions. For the battle text output, we actually adjusted the text speed between different values and determined that 0.02s was the sweet spot.
+What we kept, changed or rejected: There was a large amount of problems. Using the fixes AI suggested, we first inspected the fixes and determined whether the fix was valid. Then we fixed our code to make sure the code does not have any errors. There were a few changes the AI suggested but we did not implement, but we did choose to implement the battle text output suggestions. For the battle text output, we adjusted the text speed between different values and determined that 0.02s was the sweet spot.
 
 How we checked it; tests and corrections: We ran the game and inspected whether the issues still persisted. While most errors were fixed as expected, one that persisted during manual testing was the title block art which still looked weird, so we followed up with a prompt to fix that error. For the battle text output we tested the different values between 0.01-0.05s per letter at intervals of 0.01, and determined that 0.02s was good.
 
