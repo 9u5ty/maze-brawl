@@ -41,11 +41,13 @@ changing stuff will not break everything else.
 """
 
 def main(stdscr):
+    sr.init(stdscr)
     sr.setup_colors()
     height, width = stdscr.getmaxyx()
     if height < 24 or width < 80:
-        stdscr.addstr()
-
-    menus.main_menu(stdscr)
+        stdscr.addstr(0,0, "Resize screen to 80x24 at least.")
+        stdscr.getch()
+    else:
+        menus.main_menu(stdscr)
 
 curses.wrapper(main)

@@ -14,19 +14,49 @@ active_windows = {} #Dict for active windows, when creating windows will access 
 tooltip_string = ""
 window_active = False
 
-def setup_colors():
-    #creates color and text attribute templates for use in window systems.
-    curses.start_color()
+_screen = None
 
+def init(stdscr):
+    #Call once from main() before anything else.
+    global _screen
+    _screen = stdscr
+
+_COLOR_CODES = {
+    "black":   curses.COLOR_BLACK,
+    "red":     curses.COLOR_RED,
+    "green":   curses.COLOR_GREEN,
+    "yellow":  curses.COLOR_YELLOW,
+    "blue":    curses.COLOR_BLUE,
+    "magenta": curses.COLOR_MAGENTA,
+    "cyan":    curses.COLOR_CYAN,
+    "white":   curses.COLOR_WHITE,
+}
+
+_fg_pairs = {}
+
+def setup_colors():
+    curses.start_color()
+    curses.use_default_colors() # allow -1 background
+
+    # og menu pairs
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_RED,   curses.COLOR_BLACK)
 
-    global menu_text_select; menu_text_select = curses.color_pair(1) #base variable
-    global menu_text_select_bold; menu_text_select_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_BLINK #when selected with cursor/arrow keys, UI item will blink. Can add more colors later.
-    global menu_text; menu_text = curses.color_pair(1) | curses.A_REVERSE
-    global menu_text_bold; menu_text_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE
-    global text_red_bold; text_red_bold = curses.color_pair(3) | curses.A_BOLD
+    # Register one pair per named foreground colour on the terminal default bg
+    pair_id = 4
+    for name, code in _COLOR_CODES.items():
+        curses.init_pair(pair_id, code, -1)
+        _fg_pairs[name] = pair_id
+        pair_id += 1
+
+    global menu_text_select, menu_text_select_bold
+    global menu_text, menu_text_bold, text_red_bold
+    menu_text_select      = curses.color_pair(1)
+    menu_text_select_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_BLINK
+    menu_text             = curses.color_pair(1) | curses.A_REVERSE
+    menu_text_bold        = curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE
+    text_red_bold         = curses.color_pair(3) | curses.A_BOLD
 
 def blank_rect(stdscr, top, left, height, width, attr=0):
     line = " " * width
@@ -34,9 +64,50 @@ def blank_rect(stdscr, top, left, height, width, attr=0):
         stdscr.addstr(y, left, line, attr)
     stdscr.refresh()
 
-def get_keys(stdscr):
-    key = stdscr.getch()
-    return key
+def col(color=None, bold=False, dim=False, reverse=False, underline=False):
+    attr = curses.color_pair(_fg_pairs[color]) if color else 0
+    if bold:      attr |= curses.A_BOLD
+    if dim:       attr |= curses.A_DIM
+    if reverse:   attr |= curses.A_REVERSE
+    if underline: attr |= curses.A_UNDERLINE
+    return attr
+
+def hp_color(hp, max_hp):
+    if max_hp <= 0:
+        return "red"
+    ratio = hp / max_hp
+    if ratio > 0.6:  return "green"
+    if ratio > 0.3:  return "yellow"
+    return "red"
+
+def put(row, column, text, attr=0):
+    try:
+        _screen.addstr(row, column, str(text), attr)
+    except curses.error:
+        pass # off-screen write — ignore
+
+def clear_screen():
+    _screen.clear()
+
+def show():
+    _screen.refresh()
+
+def flush_keys():
+    curses.flushinp()
+
+def get_key():
+    k = _screen.getch()
+    if k == -1:              return None
+    if k == 27:              return "ESC"
+    if k in (10, 13):        return "ENTER"
+    if k == curses.KEY_UP:   return "UP"
+    if k == curses.KEY_DOWN: return "DOWN"
+    if k == curses.KEY_LEFT: return "LEFT"
+    if k == curses.KEY_RIGHT:return "RIGHT"
+    try:
+        return chr(k)
+    except ValueError:
+        return None
 
 
 def window_create(windownumber:int, windowname:str, windowtype:str, x1:int, y1:int, x2:int, y2:int): #Adds window to memory (dict).
