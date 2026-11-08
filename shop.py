@@ -1,6 +1,6 @@
-from data import gear, hero_colors, items, monsters
+from data import gear, hero_colors, items
 
-from fighters import add_item, atk_total, def_total, equip_from_bag, gain_gear, gear_bonus, is_upgrade, item_ids_in_bag, item_sell_value, remove_item, sell_gear, sell_item, sell_value, slot_of, unique, use_food
+from fighters import add_item, equip_from_bag, gain_gear, gear_bonus, is_upgrade, item_ids_in_bag, item_sell_value, remove_item, sell_gear, sell_item, sell_value, slot_of, unique, use_food
 
 from menus import help_screen
 
@@ -28,22 +28,22 @@ def buy(ident):
         data["gold"] -= price_of(ident)
         if ident in items:
             add_item(data,ident)
-            return f"Bought {items[ident]["name"]}."
+            return f"Bought {items[ident]['name']}."
         else:
             gain_gear(data,ident)
-            return f"Bought {gear[ident]["name"]}."
+            return f"Bought {gear[ident]['name']}."
 def sell(ident):
     data = g["player"]
     if ident in gear:
         if ident not in data["bag"]:
             return "No spare gear."
         sell_gear(data,ident)
-        return f"Sold {gear[ident]["name"]}."
+        return f"Sold {gear[ident]['name']}."
     else:
-        if data["items"].get(ident) is None:
+        if data["items"].get(ident, 0) <= 0:
             return "You don't have that item."
         sell_item(data,ident)
-        return f"Sold {items[ident]["name"]}."
+        return f"Sold {items[ident]['name']}."
 
 #use item
 def use_entry(data,kind,ident):
@@ -164,7 +164,7 @@ def s_row_text(data,i,ident,tab):
     if tab == 0 and not is_upgrade(data,ident):
         label += " (Not an upgrade)"
     if tab == 1 :
-        label += f" x{data["bag"].count(ident)}"
+        label += f" x{data['bag'].count(ident)}"
     return label
 # label for inventory
 def in_entry_txt(data,kind,ident):
@@ -195,7 +195,7 @@ def arrow(label,selected):
 #draw the row
 def draw_s_row(data,i,price,ident,tab,cur):
     affordable = tab == 1 or (data["gold"] >= price and (ident in items or is_upgrade(data, ident)))
-    attr = col("yellow" if affordable else "red", bold=affordable, dim=not affordable, rev=(i == cur))
+    attr = col("yellow" if affordable else "red", bold=affordable, dim=not affordable, reverse=(i == cur))
     text = arrow(s_row_text(data,i,ident,tab), i == cur)
     y = 5+i - max(0,cur - 8)
     put(y,4,f"{text:<50}",attr)
@@ -223,8 +223,8 @@ def draw_s_header(number,tab,data):
         buy_label = "[BUY]"
     else:
         sell_label = "[SELL]"
-    put(3,4,buy_label,col("blue",bold = True,rev = (tab ==0)))
-    put(3,11,sell_label,col("blue",bold = True,rev = (tab ==1)))
+    put(3,4,buy_label,col("blue",bold = True,reverse = (tab ==0)))
+    put(3,11,sell_label,col("blue",bold = True,reverse = (tab ==1)))
     put(3,20,"LEFT/RIGHT: Switch tabs",col(dim = True))
     hline(4)
 #draw rest info
@@ -269,7 +269,7 @@ def draw_inv_stats(data):
     put(7,2,f"Bag: {bag_names(data)}"[:74])
     put(8,2,f"Moves:",col("blue",bold = True))
     for i,move in enumerate(data["moves"]):
-        summary = move_summary(move,atk_total(data),def_total(data))
+        summary = move_summary(move)
         put(9+i,4,f"{move['name']:<15}{move_cost(move):>5}    {summary}"[:74])
 #the structure of inventory display
 def draw_inv(data,entries,cur,notice):
@@ -283,7 +283,7 @@ def draw_inv(data,entries,cur,notice):
     for i in range(top,min(len(entries),top+7)):
         kind , ident = entries[i]
         text = in_entry_txt(data,kind,ident)[:70]
-        attr = col("yellow",bold = True,rev = (i==cur))
+        attr = col("yellow",bold = True,reverse = (i==cur))
         put(15+i-top,4,arrow(text,i==cur),attr)
     if notice:
         put(22,2,notice,col("green",bold = True))

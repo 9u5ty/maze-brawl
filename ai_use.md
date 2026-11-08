@@ -53,20 +53,44 @@ Member and date: Shum Tin Yu (Eric), Oct 27
 
 Tool and model/version, where available: Claude Sonnet 5.5
 
-Purpose: Creating ASCII art for enemies
+Purpose: Creating ASCII art for heroes
 
 Relevant prompts and outputs used, or retained transcript location:
 
 Prompts (in order):
-- Create ASCII art for the heroes and enemies. Keep the hero below 20x7 (width x height). Keep enemies below 33x10 (width x height).
+- Create ASCII art for the heroes. Keep the hero below 20x7 (width x height).
 
 Outputs used:
-- The ASCII sprites for all characters
+- The ASCII sprites for the heroes
   
 Files/materials affected: art.py
 
-What we kept, changed or rejected: We used most of the ASCII sprites, but made minor modifications manually
+What we kept, changed or rejected: We used the ASCII sprites, but made minor modifications manually
 
 How we checked it; tests and corrections: We looked through the ASCII sprites and inspected whether it looks good or not
+
+## Entry 03
+
+Member and date: Shum Tin Yu (Eric), Nov 8
+
+Tool and model/version, where available: ChatGPT (GPT-6.1 Sol)
+
+Purpose: Creating ASCII art for heroes
+
+Relevant prompts and outputs used, or retained transcript location:
+
+Prompts (in order):
+- What is still missing for the game to function? Are there still any bugs, inconsistencies, and redundancies?
+- The title block still looks weird, can you fix it?
+
+Outputs used:
+- Many bugs/oversights in the code AI pointed out
+- Redundancies and unused parts of code AI pointed out
+  
+Files/materials affected: battle.py, battlescreen.py, data.py, explore.py, fighters.py, main.py, maze_system.py, menus.py, screen_render.py, shop.py, texts.py
+
+What we kept, changed or rejected: There was a large amount of problems. Using the fixes AI suggested, we fixed our code to make sure the code does not have any errors.
+
+How we checked it; tests and corrections: We ran the game and inspected whether the issues still persisted. While most errors were fixed as expected, one that persisted during manual testing was the title block art which still looked weird, so we followed up with a prompt that told ChatGPT to fix that error.
 
 Keep evidence accessible to the teaching team. Remove credentials and unrelated personal information. Submit the completed file as `ai_use.md` with the project.

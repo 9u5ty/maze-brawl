@@ -1,11 +1,12 @@
-from art import hero_art, monster_art, trophy
+import time
 from battle import can_use_move, grant_rewards, log, new_battle, play_round, rows_in_order
-from data import hero_colors, items, monsters, tag_colors
-from fighters import calc_damage, fresh_battle_state, item_ids_in_bag
+from data import items
+from fighters import fresh_battle_state, item_ids_in_bag
 from menus import help_screen
-from screen_render import screen_w, center, clear_screen, col, draw_box, get_key, hp_color, put, show, widest
+from screen_render import clear_screen, get_key, put, show
 from state import bs, g
 from texts import atk_text, battle_summary, def_text, item_summary, move_cost, status_tags
+from textwrap import wrap
 
 
 #if hp/mp full send notice when trying to using corresponding items
@@ -83,24 +84,35 @@ def battle_menu(b):
 
 
 
-# show the battle message inside a round and reset every round. after 6 message in a round next page
+#Show battle messages, six lines per page.
 def show_round(b):
     lines = []
     for row in rows_in_order(b):
         lines += b["rows"][row]
         b["rows"][row] = []
-    b["msgs"] = []
     if not lines:
         return
     bs["lines"] = lines
     bs["log_top"] = 0
-    while bs["log_top"] + 6 < len(lines):
-        draw_battle(b, [], 0, "More battle messages", more=True)
-        k = get_key()
-        if k == "ENTER":
-            bs["log_top"] += 6
-        elif k == "h":
-            help_screen()
+    while True:
+        more = bs["log_top"] + 6 < len(lines)
+        notice = "More battle messages" if more else ""
+        draw_battle(
+            b, [], 0, notice,
+            more=more, animate=True
+        )
+        if not more:
+            return
+        #Wait for Enter before revealing the next page.
+        while True:
+            k = get_key()
+            if k == "ENTER":
+                bs["log_top"] += 6
+                break
+            elif k == "h":
+                help_screen()
+                #Restore the page without replaying its animation.
+                draw_battle(b, [], 0, notice, more=True)
 # call the infor and determine the battle finished screen include the reward( link data for display and data)
 def finish_battle(b):
     rewards = None
@@ -124,7 +136,6 @@ def finish_battle(b):
 def run_battle(mon):
     data = g["player"]
     b = new_battle(data, mon)
-    bs["b"] = b
     bs["lines"] = []
     log(b, f"{mon['name']} appears!")
     show_round(b)
@@ -137,28 +148,38 @@ def run_battle(mon):
         show_round(b)
     return finish_battle(b)
 #display player and enemy current status information
+#Display the hero on the left and the enemy on the right.
 def draw_fighters(b):
     p, m = b["p"], b["m"]
-    title = "BATTLE"
-    if m["boss"]:
-        title = "BOSS BATTLE"
-    put(0, 2, f"{title}: {m['name']}"[:76])
-    put(2, 2, f"{p['name']}  HP {p['hp']}/{p['max_hp']}  MP {p['mp']}/{p['max_mp']}")
-    put(3, 2, f"ATK {atk_text(p)}  DEF {def_text(p)}  SPD {p['spd']}")
-    player_status = ", ".join(status_tags(p)) or "None"
-    put(4, 2, f"Status: {player_status}"[:76])
-    put(5, 2, f"{m['name']}  HP {m['hp']}/{m['max_hp']}")
-    put(6, 2, f"ATK {atk_text(m)}  DEF {def_text(m)}  SPD {m['spd']}")
-    enemy_status = ", ".join(status_tags(m)) or "None"
-    put(7, 2, f"Status: {enemy_status}"[:76])
+    title = "BOSS BATTLE" if m["boss"] else "BATTLE"
+    put(0, 2, title)
+    for fighter, column in ((p, 2), (m, 42)):
+        put(2, column, fighter["name"][:36])
+        put(3, column, f"HP {fighter['hp']}/{fighter['max_hp']}")
+        if fighter["is_player"]:
+            put(4, column, f"MP {fighter['mp']}/{fighter['max_mp']}")
+        stats = (
+            f"ATK {atk_text(fighter)}  "
+            f"DEF {def_text(fighter)}  "
+            f"SPD {fighter['spd']}"
+        )
+        put(5, column, stats[:36])
+        status = "Status: " + (
+            ", ".join(status_tags(fighter)) or "None"
+        )
+        for offset, text in enumerate(wrap(status, width=36)[:2]):
+            put(6 + offset, column, text)
+    for row in range(2, 8):
+        put(row, 40, "|")
 
 #draw the battle screen, display the battle to player
-def draw_battle(b, entries, cur, notice, more=False):
+def draw_battle(b, entries, cur, notice, more=False, animate=False):
     clear_screen()
     draw_fighters(b)
     top = bs.get("log_top", 0)
-    for i, line in enumerate(bs["lines"][top:top + 6]):
-        put(8 + i, 2, line[:78])
+    if not animate:
+        for i, line in enumerate(bs["lines"][top:top + 6]):
+            put(8 + i, 2, line[:78])
     for i, label in enumerate(entries):
         marker = "  "
         if i == cur:
@@ -173,3 +194,10 @@ def draw_battle(b, entries, cur, notice, more=False):
     else:
         put(23, 2, "ENTER continue   H help")
     show()
+    #Reveal each battle message one character at a time
+    if animate:
+        for i, line in enumerate(bs["lines"][top:top + 6]):
+            for column, character in enumerate(line[:78], 2):
+                put(8 + i, column, character)
+                show()
+                time.sleep(0.02)

@@ -3,7 +3,6 @@ from data import monsters
 from fighters import new_monster
 
 #Read maze text file and parse maze data.
-#The file_path is the type of the maze: easy, medium, hard
 
 def load_maze(file_path):
    

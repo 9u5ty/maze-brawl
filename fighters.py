@@ -50,7 +50,7 @@ def new_player(hero_key):
     return player_dict
 
 
-#Build monster dict, key matches maze text character:
+#Build monster dict
 
 def new_monster(key):
 
@@ -139,9 +139,7 @@ def base_def(f):
 #stat: "atk" or "def". Return 1.0 when no status effect present.
 #Also accounts for the attack buff for when boss is enraged
 def mult(f, stat):
-
-    if stat in f["status"]:
-        return f["status"][stat][0]
+    factor = f["status"].get(stat, [1.0])[0]
     if stat == "atk" and f.get("enraged"):
         factor *= 1.25
     return factor
@@ -262,7 +260,7 @@ def item_sell_value(item_id):
 #Sell one stack‑count of item, add gold. Item entry removed when count hits zero.
 def sell_item(p, item_id):
 
-    if item_id not in p["items"]:
+    if p["items"].get(item_id, 0) <= 0:
         return False
     remove_item(p, item_id)
     p["gold"] += item_sell_value(item_id)
@@ -272,7 +270,7 @@ def sell_item(p, item_id):
  #Increase count of one item in player.items dict.
 def add_item(p, item_id):
 
-    if item_id not in {"apple", "beef", "tonic", "bomb"}:
+    if item_id not in items:
         return
     p["items"][item_id] = p["items"].get(item_id, 0) + 1
 

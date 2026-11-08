@@ -1,6 +1,6 @@
 #Purpose of this is to translate data into texts shown on screen
 
-from data import gear, items, item_order
+from data import gear
 from fighters import atk_total, calc_damage, def_total
 
 #Verb forms for each DOT (damage over time) effect
@@ -16,18 +16,15 @@ def effect_texts(mv):
         label = mv["dot"][2]
         out.append(f"{pre}{dot_verbs.get(label, label)}")
     if "self_buff" in mv: #Output for attack/defense buffs
-            stat, amount, turns = mv["self_buff"]
-            out.append(f"Your {stat.upper()} {round((amount - 1) * 100)}% for {turns} turns")
+        stat, amount, turns = mv["self_buff"]
+        out.append(f"Your {stat.upper()} {round((amount - 1) * 100):+d}% for {turns} turns")
     if "debuff" in mv: #Output for attack/defense debuffs
         stat, amount, turns = mv["debuff"]
-        if mv.get("power"): #If the move is a damaging move and debuff is a secondary effect
-            out.append(f"Your {stat.upper()} {round((amount - 1) * 100):+d}% for {turns} turns")
-        else: #If the debuff is a primary effect of the move
-            out.append(f"Enemy {stat.upper()} -{round((1 - amount) * 100)}% for {turns} turns")    
+        out.append(f"Enemy {stat.upper()} {round((amount - 1) * 100):+d}% for {turns} turns")
     if mv.get("charge"): #Output for charge
         out.append("charges for a turn first")
     if mv.get("cure"): #Output for Clara's skill Holy Light, where negative effects are cured
-            out.append("cures all negative status effects")
+        out.append("cures all negative status effects")
     return out
 #Prefix for a move with secondary effects if it is not guaranteed
 def chance_prefix(mv):
@@ -39,7 +36,7 @@ def chance_prefix(mv):
     return ""
 
 #Summary of move
-def move_summary(mv, atk=None, dfn=None):
+def move_summary(mv):
     parts = [] #Output, in different parts as a move can have 2 effects
     if mv.get("power"): #Output for power of the move in percentage
         if mv.get("scale") == "def": #Damaging moves can scale with either attack or defense
@@ -126,7 +123,7 @@ def move_cost(mv):
 #What the move will do exactly (not in percentage)
 def battle_summary(mv, user, target):
     parts = [] 
-    dmg = calc_damage(user, target, mv) #Calculates the exact damage that will be dealt
+    dmg = calc_damage(user, target, mv) 
     if dmg: #Output for exact power of move
         parts.append(f"Damage {dmg}")
     if "heal" in mv: #Output for a healing effect
@@ -139,11 +136,3 @@ def battle_summary(mv, user, target):
     if "recoil" in mv: #Output for a recoil effect
         parts.append(f"Recoil {mv['recoil']}")
     return ", ".join(parts) #Joins the different parts into one output
-
-#Shows the starting items (with their number) each character starts with in starting screen
-def items_label(item_counts):
-    parts = []
-    for item_id in item_order:
-        if item_counts.get(item_id):
-            parts.append(f"{item_counts[item_id]} {items[item_id]['name']}")
-    return ", ".join(parts) or "none"

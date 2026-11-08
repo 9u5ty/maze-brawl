@@ -1,8 +1,6 @@
 import curses
 
 # Just acting as a library for colour pairs so we can all call the same colour pairs, and also manage drawing borders.
-W_HEIGHT = 22
-W_WIDTH = 79
 active_windows = {} #Dict for active windows, when creating windows will access dict for window data.
 # If there's more windows, will access coordinates, menus, and access them based on that (which is how the inventory can visually update.)
 # active_windows = {
@@ -11,8 +9,6 @@ active_windows = {} #Dict for active windows, when creating windows will access 
 #   #Can directly access window data once the window has been created, can edit items, etc.
 # }
 #
-tooltip_string = ""
-window_active = False
 
 _screen = None
 
@@ -20,6 +16,7 @@ def init(stdscr):
     #Call once from main() before anything else.
     global _screen
     _screen = stdscr
+    curses.set_escdelay(25)
 
 _COLOR_CODES = {
     "black":   curses.COLOR_BLACK,
@@ -50,13 +47,9 @@ def setup_colors():
         _fg_pairs[name] = pair_id
         pair_id += 1
 
-    global menu_text_select, menu_text_select_bold
-    global menu_text, menu_text_bold, text_red_bold
-    menu_text_select      = curses.color_pair(1)
+    global menu_text_select_bold, menu_text
     menu_text_select_bold = curses.color_pair(1) | curses.A_BOLD | curses.A_BLINK
     menu_text             = curses.color_pair(1) | curses.A_REVERSE
-    menu_text_bold        = curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE
-    text_red_bold         = curses.color_pair(3) | curses.A_BOLD
 
 def blank_rect(stdscr, top, left, height, width, attr=0):
     line = " " * width
@@ -104,8 +97,10 @@ def get_key():
     if k == curses.KEY_DOWN: return "DOWN"
     if k == curses.KEY_LEFT: return "LEFT"
     if k == curses.KEY_RIGHT:return "RIGHT"
+    if k == curses.KEY_RESIZE:return "RESIZE"
     try:
-        return chr(k)
+        ch = chr(k).lower()
+        return {"w": "UP", "a": "LEFT", "s": "DOWN", "d": "RIGHT"}.get(ch, ch)
     except ValueError:
         return None
 
@@ -143,9 +138,6 @@ def clear_window(stdscr, windownumber:int, attr=0):
     for y in range(y1 + 1, y2):
         stdscr.addstr(y, x1 + 1, blank, attr)
 
-def wrap_text(text):
-    pass
-
 def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:int, rows:int, columns:int):
     #Draws menu buttons within the window.
     #using x1, y1, x2, y2, defines dimensions to arrange grids in.
@@ -168,9 +160,6 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
     cell_width  = max(1, inner_width // columns)   # one column of the grid
     cell_height  = 1 + button_padding_y             # 1 text row + vertical gap
 
-    next_window_name = active_windows[windownumber + 1][0][0] if len(active_windows) > 1 else None
-    next_window_type = active_windows[windownumber + 1][0][1] if len(active_windows) > 1 else None
-
     has_description = (
         windownumber + 1 in active_windows
         and active_windows[windownumber + 1][0] == ["Description", "text"]
@@ -190,22 +179,12 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
 
     visible = buttons[: rows * columns]   #no pages so far I don't want to implement that hellish thing
 
-    if next_window_name == "Description" and next_window_type == "text":
-        display_text = []
-        for i in range(len(active_windows[windownumber + 1][1])):
-            display_text.append(active_windows[windownumber + 1][1][i])
-
-        display_x1, display_y1, display_x2, display_y2 = active_windows[windownumber + 1][2][:4]
-        display_width = active_windows[windownumber + 1][2][2] - active_windows[windownumber + 1][2][0]
-        display_height = active_windows[windownumber + 1][2][3] - active_windows[windownumber + 1][2][1]
-
 # for a window of border coords x1 = 40, y1 = 0, x2, 79, y2 = 22
 # width = display width - 2 because of left and right border, need to start by + 1 to index to avoid editing border
 # height = display height - 2 because of left, need to start by + 1 to indext to avoid editing border
 # have to wrap inside of that, so x1 = 41, y1 = 1, x2 = 78, y2 = 21
 
     def render(selected):
-        #tooltip draws once, depends on button.
         tip_y = min(23, curses.LINES - 1)
         blank_rect(stdscr, tip_y, 0, 1, min(79, curses.COLS))
         tip = f"{active_windows[windownumber][0][0]}: {buttons[selected]}"
@@ -232,10 +211,10 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
                         row += 1
                         col = display_x1 + 1
                         continue
-                    if col >= max_col:
+                    if col > max_col:
                         row += 1
                         col = display_x1 + 1
-                    if row >= max_row:
+                    if row > max_row:
                         break
                     stdscr.addstr(row, col, ch)
                     col += 1
@@ -265,3 +244,27 @@ def draw_menu(stdscr, windownumber:int, button_padding_x:int, button_padding_y:i
             return visible[selected]          # ← the chosen button
         elif key == 27:
             return "escape"
+
+#Functions below are for popup handling
+def center(y, text, attr=0):
+    put(y, (80 - len(text)) // 2, text, attr)
+
+def hline(y):
+    put(y, 0, "-" * 80)
+
+def popup(lines, title="", keys=("ENTER",), border="yellow"):
+    top = (24 - len(lines) - 4) // 2
+    _, width = _screen.getmaxyx()
+    blank_rect(_screen, top, 0, len(lines) + 4, width)
+    put(top, 3, title, col(border, bold=True))
+    for i, line in enumerate(lines):
+        text, color = (line, None) if isinstance(line, str) else line
+        put(top + 2 + i, 3, text[:74], col(color))
+    show()
+    while True:
+        key = get_key()
+        if key in keys:
+            return key
+
+def confirm(lines, title="", border="yellow"):
+    return popup(list(lines) + ["", "[Y] Yes [N] No"], title, keys=("y", "n", "ESC"), border=border) == "y"

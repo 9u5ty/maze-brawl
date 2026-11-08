@@ -7,7 +7,7 @@ from screen_render import clear_screen, col, confirm, flush_keys, get_key, hp_co
 from shop import inventory_screen, shop_screen
 from state import g
 from texts import atk_text, def_text, gear_label
-from maze_system import map_h, map_w, entity_at, is_blocked, load_map, nearby
+from maze_system import entity_at, is_blocked, load_map, nearby
 
 #Load the map, create the hero and reset gold for a fresh run
 def start_game(hero_key, mapdef):
@@ -19,8 +19,10 @@ def start_game(hero_key, mapdef):
 def say(text):
     g["message"] = text
 
-#Draw two status lines at the top of the map screen.
-def draw_status():
+#Draw the whole map screen
+def draw_explore():
+    clear_screen()
+    #Draws player info
     p = g["player"]
     put(0, 0, p["name"], col(hero_colors[p["key"]], bold=True))
     put(0, 14, f"HP {p['hp']}/{p['max_hp']}", col(hp_color(p["hp"], p["max_hp"]), bold=True))
@@ -29,13 +31,11 @@ def draw_status():
     line = (f"ATK {atk_text(p)}   DEF {def_text(p)}   Items:{sum(p['items'].values())}"
             f"   [{g['mapdef']['name']}]")
     put(1, 0, line, col(dim=True))
-
-# Draw walls, shops, the exit, monsters and the hero (a white @)
-def draw_map():
+    # Draw walls, shops, the exit, monsters and the hero (a white @)
     maze = g["maze"]
-    for y in range(map_h):
-        for x in range(map_w):
-            if maze["wall"][y][x]:
+    for y, row in enumerate(maze["wall"]):
+        for x, wall in enumerate(row):
+            if wall:
                 put(2 + y, x, "#", col(g["mapdef"]["color"], bold=True))
                 continue
             e = entity_at(maze, x, y)
@@ -49,13 +49,7 @@ def draw_map():
                 mon = e["mon"]
                 put(2 + y, x, mon["t"]["glyph"], col(mon["t"]["color"], bold=True))
     put(2 + g["py"], g["px"], "@", col("white", bold=True))
-
-# Draw the whole map screen
-def draw_explore():
-    clear_screen()
-    draw_status() #Status
-    draw_map() #Map
-    if g["message"]: #Message
+    if g["message"]:
         put(22, 0, g["message"])
     e = nearby(g["maze"], g["px"], g["py"])
     if e is None: #Hints
@@ -98,7 +92,6 @@ def try_move(dx, dy):
     if e and e["kind"] == "exit": #If tile tried is exit, it exits the maze
         return "exit"
     return None
-
 #E key (interaction key), which performs interaction tasks
 def interact():
     maze = g["maze"]
@@ -118,43 +111,36 @@ def interact():
     if result == "win":
         g["kills"] += 1
         e["dead"] = True
-        show_spoils(mon, rewards)
+        #Popup after winning a battle
+        gold, drops = rewards
+        draw_explore()
+        if mon["boss"]:
+            popup([(f"{mon['name'].upper()} IS DEFEATED!", "green"), "", "Walk onto the exit  E  to escape!", "", ("Press ENTER to continue", "green")], "VICTORY", border="green")
+            say("The boss is down! Reach the exit E!")
+            return
+        gear_line = "Gear: none" #Separate row for gear and item
+        item_line = "Item: none"
+        for kind, ident, note in drops:
+            if kind == "gear":
+                gear_line = f"Gear: {gear_label(ident)} - {note}"
+            else:
+                item_line = f"Item: {items[ident]['name']}"
+        popup([(f"{mon['name']} is defeated!", "green"), "", f"Gold +{gold}",
+            (gear_line, "cyan"), (item_line, "cyan"), "",
+            ("Press ENTER to continue", "green")], "SPOILS", border="green")
+        say(f"Defeated {mon['name']}! +{gold} gold.")
     else:
         reset_monster(mon)
-        blackout()
-
-#Losing a fight makes you black out. You also lose half your gold
-def blackout():
-    p = g["player"]
-    g["deaths"] += 1
-    lost = p["gold"] // 2
-    p["gold"] -= lost
-    p["hp"], p["mp"] = p["max_hp"], p["max_mp"]
-    g["px"], g["py"] = g["maze"]["start"]
-    draw_explore()
-    popup(list(grave) + ["", f"{p['name']} was defeated...", f"You wake at the start of the maze. Lost {lost} gold.", "", ("Press ENTER to try again", "green")], "DEFEATED", border="red")
-    say(f"You blacked out and lost {lost} gold. Try again!")
-
-#Popup after winning a battle
-def show_spoils(mon, rewards):
-    gold, drops = rewards 
-    draw_explore()
-    if mon["boss"]:
-        popup([(f"{mon['name'].upper()} IS DEFEATED!", "green"), "", "Walk onto the exit  E  to escape!", "", ("Press ENTER to continue", "green")], "VICTORY", border="green")
-        say("The boss is down! Reach the exit E!")
-        return
-    gear_line = "Gear: none" #Separate row for gear and item
-    item_line = "Item: none"
-    for kind, ident, note in drops:
-        if kind == "gear":
-            gear_line = f"Gear: {gear_label(ident)} - {note}"
-        else:
-            item_line = f"Item: {items[ident]['name']}"
-    popup([(f"{mon['name']} is defeated!", "green"), "", f"Gold +{gold}",
-           (gear_line, "cyan"), (item_line, "cyan"), "",
-           ("Press ENTER to continue", "green")], "SPOILS", border="green")
-    say(f"Defeated {mon['name']}! +{gold} gold.")
-
+        #Losing a fight makes you black out. You also lose half your gold
+        p = g["player"]
+        g["deaths"] += 1
+        lost = p["gold"] // 2
+        p["gold"] -= lost
+        p["hp"], p["mp"] = p["max_hp"], p["max_mp"]
+        g["px"], g["py"] = g["maze"]["start"]
+        draw_explore()
+        popup(list(grave) + ["", f"{p['name']} was defeated...", f"You wake at the start of the maze. Lost {lost} gold.", "", ("Press ENTER to try again", "green")], "DEFEATED", border="red")
+        say(f"You blacked out and lost {lost} gold. Try again!")
 #"A monster blocks the way" popup
 def monster_popup(mon):
     p = g["player"]

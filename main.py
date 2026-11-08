@@ -39,6 +39,8 @@ changing stuff will not break everything else.
 
 
 """
+from explore import explore, start_game
+from victory import victory_screen
 
 def main(stdscr):
     sr.init(stdscr)
@@ -48,6 +50,16 @@ def main(stdscr):
         stdscr.addstr(0,0, "Resize screen to 80x24 at least.")
         stdscr.getch()
     else:
-        menus.main_menu(stdscr)
+        while True:
+            hero = menus.main_menu(stdscr)
+            if hero is None:
+                continue
+            mapdef = menus.choose_map(stdscr)
+            if mapdef is None:
+                continue
+            start_game(hero, mapdef)
+            if explore() == "exit":
+                victory_screen()
 
-curses.wrapper(main)
+if __name__ == "__main__":
+    curses.wrapper(main)
