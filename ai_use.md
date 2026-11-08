@@ -75,24 +75,25 @@ Member and date: Shum Tin Yu (Eric), Nov 8
 
 Tool and model/version, where available: ChatGPT (GPT-6.1 Sol)
 
-Purpose: Creating ASCII art for heroes
+Purpose: Final fixes to the game
 
 Relevant prompts and outputs used, or retained transcript location:
 
 Prompts (in order):
 - What is still missing for the game to function? Are there still any bugs, inconsistencies, and redundancies?
 - The title block still looks weird, can you fix it?
+- What other changes can I implement to make the game a little better?
 
 Outputs used:
-- Added a few minor parts of code in order for some functions to work properly
-- Fixed many bugs/oversights in the code AI pointed out
-- Removed multiple redundancies and unused parts of code AI pointed out
+- Added a few minor parts of code in order for some functions to work properly, fixed many bugs/oversights in the code AI pointed out, removed multiple redundancies and unused parts of code AI pointed out
+- Fixed the title block in the title screen
+- Implemented a suggestion where battle text output printed the text letter by letter in short intervals
   
 Files/materials affected: battle.py, battlescreen.py, data.py, explore.py, fighters.py, main.py, maze_system.py, menus.py, screen_render.py, shop.py, texts.py
 
-What we kept, changed or rejected: There was a large amount of problems. Using the fixes AI suggested, we first inspected the fixes and determined whether the fix was valid. Then we fixed our code to make sure the code does not have any errors.
+What we kept, changed or rejected: There was a large amount of problems. Using the fixes AI suggested, we first inspected the fixes and determined whether the fix was valid. Then we fixed our code to make sure the code does not have any errors. There were a few changes the AI suggested but we did not implement, and only implemented the battle text output suggestion. For the battle text output, we actually adjusted the text speed between different values and determined that 0.02s was the sweet spot.
 
-How we checked it; tests and corrections: We ran the game and inspected whether the issues still persisted. While most errors were fixed as expected, one that persisted during manual testing was the title block art which still looked weird, so we followed up with a prompt that told ChatGPT to fix that error.
+How we checked it; tests and corrections: We ran the game and inspected whether the issues still persisted. While most errors were fixed as expected, one that persisted during manual testing was the title block art which still looked weird, so we followed up with a prompt that told ChatGPT to fix that error. For the battle text output we actually tested the different values between 0.01-0.05s per letter at intervals of 0.01, and determined that 0.02s was good.
 
 ## Entry 04
 
