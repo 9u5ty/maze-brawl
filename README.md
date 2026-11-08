@@ -32,7 +32,6 @@ Run the game in a terminal window at least **80 columns wide and 24 rows high**.
 4. Check Python and install [windows-curses](https://pypi.org/project/windows-curses/), which provides the `curses` module on Windows. Installation is needed only once per Python environment:
 
    ```powershell
-   py --version
    py -m pip install windows-curses
    ```
 
@@ -42,7 +41,7 @@ Run the game in a terminal window at least **80 columns wide and 24 rows high**.
    py -B main.py
    ```
 
-If `py` is not recognised but `python --version` works, use `python` in place of `py` in all three commands above.
+If `py` is not recognised but `python` works, use `python` in place of `py` in all three commands above.
 
 The `-B` option prevents Python from creating `__pycache__` files.
 
