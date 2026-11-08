@@ -100,7 +100,7 @@ Member and date: Shum Tin Yu (Eric), Nov 8
 
 Tool and model/version, where available: ChatGPT (GPT-6.1 Sol)
 
-Purpose: Creating README.md instructions for Windows users (I do not own a Windows device, so I do not know how to load in that environment)
+Purpose: Creating README.md instructions for Windows users (I do not own a Windows device, so I do not know how to load the game in that environment)
 
 Relevant prompts and outputs used, or retained transcript location:
 
