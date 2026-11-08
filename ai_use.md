@@ -85,8 +85,8 @@ Prompts (in order):
 
 Outputs used:
 - Added a few minor parts of code in order for some functions to work properly
-- Fixed any bugs/oversights in the code AI pointed out
-- Removed redundancies and unused parts of code AI pointed out
+- Fixed many bugs/oversights in the code AI pointed out
+- Removed multiple redundancies and unused parts of code AI pointed out
   
 Files/materials affected: battle.py, battlescreen.py, data.py, explore.py, fighters.py, main.py, maze_system.py, menus.py, screen_render.py, shop.py, texts.py
 
