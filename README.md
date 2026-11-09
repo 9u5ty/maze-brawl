@@ -58,8 +58,8 @@ The `-B` option prevents Python from creating `__pycache__` files.
 - E: interact with an adjacent monster or a shop beneath you
 - I: inventory
 - H: opens help menu that offers help during play
-- ESC: go back; during exploration, confirm leaving the current run
-- Select Quit in the main menu: close the game
+- ESC: go back during exploration, leaving the current run
+- Select Quit in main menu: close the game
 
 Note: Runs are not saved. A defeat restores HP/MP and sends you to the start, costing half your gold. Better gear is equipped automatically, and old gear stays in your bag.
 
