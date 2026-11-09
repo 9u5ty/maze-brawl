@@ -8,7 +8,6 @@ from state import bs, g
 from texts import atk_text, battle_summary, def_text, item_summary, move_cost, status_tags
 from textwrap import wrap
 
-
 #if hp/mp full send notice when trying to using corresponding items
 def refuse(data,ident):
     inf = items[ident]
@@ -84,7 +83,7 @@ def battle_menu(b):
 
 
 
-#Show battle messages, six lines per page.
+#Show battle messages
 def show_round(b):
     lines = []
     for row in rows_in_order(b):
@@ -95,7 +94,7 @@ def show_round(b):
     bs["lines"] = lines
     bs["log_top"] = 0
     while True:
-        more = bs["log_top"] + 6 < len(lines)
+        more = bs["log_top"] + 9 < len(lines)
         notice = "More battle messages" if more else ""
         draw_battle(
             b, [], 0, notice,
@@ -107,7 +106,7 @@ def show_round(b):
         while True:
             k = get_key()
             if k == "ENTER":
-                bs["log_top"] += 6
+                bs["log_top"] += 9
                 break
             elif k == "h":
                 help_screen()
@@ -177,15 +176,16 @@ def draw_battle(b, entries, cur, notice, more=False, animate=False):
     clear_screen()
     draw_fighters(b)
     top = bs.get("log_top", 0)
+    lines = bs["lines"][top:top + 9]
     if not animate:
-        for i, line in enumerate(bs["lines"][top:top + 6]):
+        for i, line in enumerate(lines):
             put(8 + i, 2, line[:78])
     for i, label in enumerate(entries):
         marker = "  "
         if i == cur:
             marker = "> "
-        put(15 + i, 2, f"{marker}{i + 1}. {label}"[:76])
-    put(20, 2, notice[:76])
+        put(17 + i, 2, f"{marker}{i + 1}. {label}"[:76])
+    put(21, 2, notice[:76])
     if more:
         put(23, 2, "ENTER next messages   H help")
     elif not b["over"]:
@@ -196,7 +196,7 @@ def draw_battle(b, entries, cur, notice, more=False, animate=False):
     show()
     #Print battle message one character at a time at 0.02s intervals
     if animate:
-        for i, line in enumerate(bs["lines"][top:top + 6]):
+        for i, line in enumerate(lines):
             for column, character in enumerate(line[:78], 2):
                 put(8 + i, column, character)
                 show()

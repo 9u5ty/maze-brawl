@@ -2,7 +2,7 @@ import random
 from data import items
 from fighters import add_item, calc_damage, fresh_battle_state, gain_gear, heal, remove_item, use_food
 
-#Messages are shown in a maximum of 6 rows: The move and effect of both the hero and the enemy, status effect text, and ability activation text.
+#Six message categories
 battle_rows = ["enemy", "enemy effect", "hero", "hero effect", "status", "ability"]
 #Determines the order of the effect text, as hero and enemies move first/second based on their speed.
 def rows_in_order(b):
