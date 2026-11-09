@@ -68,3 +68,6 @@ Note: Runs are not saved. A defeat restores HP/MP and sends you to the start, co
 - Pivet Gabriel Jean: main.py, menus.py, screens.py, video editing
 - Yan Jiayu (Joe): fighters.py, maze_system.py, maps
 - Guo Fu Ze (Phillip): battlescreen.py, shop.py
+
+## Sources
+- Curses Programming with Python (https://docs.python.org/3/howto/curses.html): Learned about curses to allow an interactive terminal interface
