@@ -56,3 +56,9 @@ The `-B` option prevents Python from creating `__pycache__` files.
 - Select Quit in the main menu: close the game
 
 Note: Runs are not saved. A defeat restores HP/MP and sends you to the start, costing half your gold. Better gear is equipped automatically, and old gear stays in your bag.
+
+## Contributions
+Shum Tin Yu (Eric): art.py, battle.py, data.py, explore.py, helpbook.py, state.py, texts.py, victory.py, maps, additional debugging, README, recording video footage
+Pivet Gabriel Jean: main.py, menus.py, screens.py, video editing
+Yan Jiayu (Joe): fighters.py, maze_system.py, maps
+Guo Fu Ze (Phillip): battlescreen.py, shop.py
