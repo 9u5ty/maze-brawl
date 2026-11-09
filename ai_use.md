@@ -62,7 +62,7 @@ Member and date: Shum Tin Yu (Eric), Nov 8
 
 Tool and model/version, where available: ChatGPT (GPT-6.1 Sol)
 
-Purpose: Final fixes to the game
+Purpose: Final fixes and adjustments to the game
 
 Relevant prompts and outputs used, or retained transcript location:
 
@@ -88,7 +88,7 @@ Member and date: Shum Tin Yu (Eric), Nov 8
 
 Tool and model/version, where available: ChatGPT (GPT-6.1 Sol)
 
-Purpose: Creating README.md instructions for Windows users (I do not own a Windows device, so I do not know how to load the game in that environment)
+Purpose: Creating README.md instructions for Windows users (I do not own a Windows device)
 
 Relevant prompts and outputs used, or retained transcript location:
 
@@ -101,6 +101,6 @@ Outputs used:
   
 Files/materials affected: README.md
 
-What we kept, changed or rejected: We liked the formatting for the Windows instructions, so we kept it and also changed our formatting for the Mac instructions.
+What we kept, changed or rejected: We liked the formatting for the Windows instructions, so we kept it and also modified our formatting for the Mac instructions.
 
-How we checked it; tests and corrections: N/A, as this is README.md
+How we checked it; tests and corrections: By reading and checking if the wording and instructions were correct. Made minimal changes to the wording.
