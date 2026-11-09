@@ -3,7 +3,7 @@ from battle import can_use_move, grant_rewards, log, new_battle, play_round, row
 from data import items
 from fighters import fresh_battle_state, item_ids_in_bag
 from menus import help_screen
-from screen_render import clear_screen, get_key, put, show
+from screen_render import clear_screen, flush_keys, get_key, put, show
 from state import bs, g
 from texts import atk_text, battle_summary, def_text, item_summary, move_cost, status_tags
 from textwrap import wrap
@@ -201,3 +201,4 @@ def draw_battle(b, entries, cur, notice, more=False, animate=False):
                 put(8 + i, column, character)
                 show()
                 time.sleep(0.02)
+        flush_keys() #This ensures that any keypresses when text is still printing is ignored
