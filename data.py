@@ -96,7 +96,7 @@ heroes = {
         "hp": 120, "mp": 30, "atk": 8, "def_": 5, "spd": 2, 
         "weapon": "wooden_sword", "armor": "chainmail", "items": {"apple": 1, "beef": 1}, 
         "moves": ["iron_fist", "fortify", "bulwark_blow", "provoke"], 
-        "passive": "plating", "passive_desc": "Plating: hits taken -2", 
+        "passive": "plating", "passive_desc": "Plating: hits taken -2 damage", 
     },
 
     "clara": {
