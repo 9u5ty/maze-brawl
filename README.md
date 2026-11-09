@@ -1,7 +1,13 @@
-# maze-brawl
-Python maze crawling game
+# Maze Brawl
+Made by HKU ENGG1330 Group N01 (Subclass N).
 
 A turn-based maze crawling game for a terminal. Choose one of four heroes and one of three maps, defeat the monsters guarding the maze, and escape past the boss.
+
+## Group members
+- Shum Tin Yu (3036729793)
+- Pivet Gabriel Jean (3036810475)
+- Yan Jiayu (3036699675)
+- Guo Fu Ze (3036861709)
 
 ## How to run
 
@@ -58,7 +64,7 @@ The `-B` option prevents Python from creating `__pycache__` files.
 Note: Runs are not saved. A defeat restores HP/MP and sends you to the start, costing half your gold. Better gear is equipped automatically, and old gear stays in your bag.
 
 ## Contributions
-- Shum Tin Yu (3036729793): art.py, battle.py, data.py, explore.py, helpbook.py, state.py, texts.py, victory.py, maps, additional debugging, README, recording video footage
-- Pivet Gabriel Jean (3036810475): main.py, menus.py, screens.py, video editing
-- Yan Jiayu (3036699675): fighters.py, maze_system.py, maps
-- Guo Fu Ze (3036861709): battlescreen.py, shop.py
+- Shum Tin Yu (Eric): art.py, battle.py, data.py, explore.py, helpbook.py, state.py, texts.py, victory.py, maps, additional debugging, README, recording video footage
+- Pivet Gabriel Jean: main.py, menus.py, screens.py, video editing
+- Yan Jiayu (Joe): fighters.py, maze_system.py, maps
+- Guo Fu Ze (Phillip): battlescreen.py, shop.py
