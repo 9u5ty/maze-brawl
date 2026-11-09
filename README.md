@@ -57,6 +57,9 @@ The `-B` option prevents Python from creating `__pycache__` files.
 
 Note: Runs are not saved. A defeat restores HP/MP and sends you to the start, costing half your gold. Better gear is equipped automatically, and old gear stays in your bag.
 
+## Known Limitations
+- You can perform instructions in battle while the battle text is printing. So if you spam the Enter key too fast it will seem like you are unable to choose a move. To get past this, don't perform moves while the battle text is printing.
+
 ## Contributions
 - Shum Tin Yu (3036729793): art.py, battle.py, data.py, explore.py, helpbook.py, state.py, texts.py, victory.py, maps, additional debugging, README, recording video footage
 - Pivet Gabriel Jean (3036810475): main.py, menus.py, screens.py, video editing
