@@ -127,7 +127,7 @@ def interact():
                 item_line = f"Item: {items[ident]['name']}"
         popup([(f"{mon['name']} is defeated!", "green"), "", f"Gold +{gold}",
             (gear_line, "cyan"), (item_line, "cyan"), "",
-            ("Press ENTER to continue", "green")], "SPOILS", border="green")
+            ("Press ENTER to continue", "green")], "REWARDS", border="green")
         say(f"Defeated {mon['name']}! +{gold} gold.")
     else:
         reset_monster(mon)
