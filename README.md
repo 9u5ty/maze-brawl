@@ -1,7 +1,7 @@
 # maze-brawl
 Python maze crawling game
 
-A turn-based maze crawling game for a terminal. Choose one of four heroes and one of three maps, defeat the monsters guarding the route, and escape past the boss.
+A turn-based maze crawling game for a terminal. Choose one of four heroes and one of three maps, defeat the monsters guarding the maze, and escape past the boss.
 
 ## How to run
 
